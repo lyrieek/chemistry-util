@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MatterViz</title>
+    <meta name="description" content="Interactive chemical-composition pie charts." />
+    <script>
+      ;(() => {
+        let saved = null
+        try {
+          saved = localStorage.getItem('theme')
+        } catch {
+          /* file:// 或隐私模式下拿不到存储，继续用系统偏好 */
+        }
+        const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
