@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-const LOCALE_DIR = join(import.meta.dirname, '..', 'src', 'locales')
+const LOCALE_DIR = join(import.meta.dirname, '..', 'src', 'locales', 'material-cards')
 
 const LIMITS = {
   name: { zh: 18, en: 25 },

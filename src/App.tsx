@@ -1,13 +1,13 @@
 import { type Material, MATERIALS } from './materials'
 import { calculatePercentages, type CompositionBasis, type ElementProportion } from './composition'
 import { useTranslation } from 'react-i18next'
-import type { Lang } from './i18n'
 import { useEffect, useState } from 'react'
 import { Pie } from '@visx/shape'
 import { Group } from '@visx/group'
 import { Sector, SectorLabel } from './Sector'
 import { Lattice } from './Lattice'
 import { Slider } from './components/slider'
+import { LanguageButton } from './components/language-button'
 import { materialMatches } from './search'
 import { useAnimatedPercentages } from './use-animated-percentages'
 
@@ -162,13 +162,11 @@ function Card({ m, view, basis }: { m: Material; view: ViewMode; basis: Composit
 }
 
 export default function App() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [view, setView] = useState<ViewMode>('pie')
   const [basis, setBasis] = useState<CompositionBasisOption>('mass')
   const [theme, setTheme] = useState<Theme>(initialTheme)
   const [search, setSearch] = useState('')
-  const lang = i18n.language as Lang
-  const toggleLang = () => i18n.changeLanguage(lang === 'zh' ? 'en' : 'zh')
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
   const materials = search.trim()
     ? MATERIALS.filter((m) => materialMatches(m, search, [m.name, t(`name.${m.name}`, { lng: 'zh' }), t(`name.${m.name}`, { lng: 'en' })]))
@@ -231,9 +229,7 @@ export default function App() {
         <button className="icon-button" type="button" onClick={toggleTheme} aria-label={t('Switch theme')} title={t('Switch theme')}>
           {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
         </button>
-        <button className="lang-button" onClick={toggleLang}>
-          {t('Switch language')}
-        </button>
+        <LanguageButton className="lang-button" label={t('Switch language')} />
       </div>
       <h1>{t('Chemical Composition')}</h1>
       <h2>{t(view === 'pie' ? 'As pie chart' : 'As lattice')}</h2>

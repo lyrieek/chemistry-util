@@ -1,0 +1,32 @@
+{
+  "translation": {
+    "Periodic Table": "Periodic Table",
+    "Search elements": "Search by name, symbol or number…",
+    "Elements count": "{{n}} of {{total}} elements",
+    "Switch language": "Switch language",
+    "fields": {
+      "Number": "Number",
+      "Symbol": "Symbol",
+      "Name": "Name",
+      "Atomic Mass": "Atomic Mass",
+      "Category": "Category",
+      "Group": "Group",
+      "Period": "Period",
+      "Phase": "Phase",
+      "Appearance": "Appearance",
+      "Density (g/cm³)": "Density (g/cm³)",
+      "Melting Point (K)": "Melting Point (K)",
+      "Boiling Point (K)": "Boiling Point (K)",
+      "Electronegativity": "Electronegativity",
+      "Electron Affinity (kJ/mol)": "Electron Affinity (kJ/mol)",
+      "Electron Configuration": "Electron Configuration",
+      "Atomic Radius (pm)": "Atomic Radius (pm)",
+      "Covalent Radius (pm)": "Covalent Radius (pm)"
+    },
+    "valTypes": {
+      "Solid": "Solid",
+      "Liquid": "Liquid",
+      "Gas": "Gas"
+    }
+  }
+}

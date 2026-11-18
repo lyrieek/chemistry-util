@@ -13,7 +13,8 @@
 - **晶格视图**：用 `@visx/delaunay` 把元素种子点切成 Voronoi 晶胞，每个晶胞填充对应元素的颜色，形成多晶组织质感的「晶格切片」；hover 时高亮当前晶胞和邻居，并在左上角显示「元素 · 占比」读数。
 - **主题切换**：顶栏太阳/月亮按钮切换浅色/深色，写入 `<html data-theme>` 和 `localStorage`；刷新后保持，首帧由 `index.html` 里的极小脚本提前恢复，避免闪白/闪黑。
 - **响应式**：桌面自动多列；`<=768px` 单列、收紧留白，图表按屏宽缩放；触屏没有 hover 时用按下反馈代替上浮。
-- **中英文切换**：i18next / react-i18next，材料名、描述和界面文案都有 `zh` / `en` 资源。
+- **中英文切换**：i18next / react-i18next，材料名、描述和界面文案都有 `zh` / `en` 资源；元素周期表是独立命名空间，共用同一个切换按钮组件。
+- **元素周期表**：独立页面，按 17 列展示元素（含族/周期、电负性、电子亲和能、电子构型、原子/共价半径），支持点表头排序、按名称/符号/序号搜索，列宽不够时表格内横向滚动。
 - **搜索**：顶栏搜索栏按中英文名称、化学式和元素符号过滤卡片，不区分大小写、包含匹配（如「水 / Water / H₂O / h2o / Fe」）；无结果时显示空状态，`Esc` 或 × 清空。
 - **SMILES**：卡片在化学式下方显示 SMILES（等宽字体、可选中复制）；合金、网络固体和混合物没有单一有意义的 SMILES，桌面端显示 `—`，手机端不显示该行。
 - **单文件构建**：`pnpm build` 会生成一个可直接打开的 `dist/index.html`，CSS 和 JS 全部内联，无外部依赖。
@@ -38,18 +39,20 @@ pnpm dev
 
 打开终端里 Vite 输出的地址即可。
 
+开发时可通过 `/periodic-table` 直接打开元素周期表页面（由 `scripts/dev-routes.mjs` 在 dev 模式下重写到 `src/pages/periodic-table.html`，仅开发生效）。
+
 ### 构建单文件
 
 ```bash
 pnpm build
 ```
 
-流程是 `tsc -b` → `vite build` → `scripts/inline-build.mjs`：
+流程是 `tsc -b` → `scripts/inline-build.mjs`：
 
-1. 把 `dist/assets` 里的 JS、CSS 内联回 `dist/index.html`
-2. 删除其余构建产物
+1. 脚本按页面分别调用 Vite 构建（`codeSplitting: false`），每页只产出一个 JS chunk
+2. 把该页的 JS、CSS、图标内联回它自己的 HTML，并删除其余构建产物
 
-最终只需要 `dist/index.html` 一个文件即可展示。`pnpm preview` 可以本地预览构建结果。
+最终 `dist/index.html` 与 `dist/periodic-table.html` 都是可直接打开的独立单文件。`pnpm preview` 可以本地预览构建结果。
 
 ### 常用脚本
 
@@ -78,21 +81,32 @@ pnpm build
 │  ├─ Lattice.tsx              Voronoi 晶格视图
 │  ├─ components/
 │  │  ├─ slider.tsx            通用滑块切换器（等分选项 + 单个滑块）
-│  │  └─ slider.css            滑块自带样式与移动端 / 动效降级
+│  │  ├─ slider.css            滑块自带样式与移动端 / 动效降级
+│  │  └─ language-button.tsx   中英文切换按钮（两个页面共用）
+│  ├─ locales/
+│  │  ├─ material-cards/       首页材料与界面文案（zh.json / en.json）
+│  │  └─ periodic-table/       元素周期表文案（zh.json / en.json）
+│  ├─ utils/
+│  │  └─ csv-utils.ts          CSV 解析（CsvRow + parseCsv）
 │  ├─ materials.ts             材料数据、Element/Material 类型、PALETTE
 │  ├─ composition.ts           原子量常数、质量比/原子比纯函数
 │  ├─ search.ts                搜索匹配逻辑（名称 / 化学式 / 元素符号）
-│  ├─ i18n.ts                  中英文资源与 i18next 初始化
+│  ├─ i18n.ts                  命名空间注册与 i18next 初始化
 │  ├─ styles.css               基础样式：CSS 变量、深浅色、卡片、响应式
 │  ├─ lattice.css              晶格视图样式
 │  ├─ search.css               搜索栏与空状态样式
-│  └─ vite-env.d.ts            Vite 客户端类型（支持 import CSS）
+│  ├─ vite-env.d.ts            Vite 客户端类型（支持 import CSS）
+│  ├─ pages/
+│  │  ├─ periodic-table.html    元素周期表入口 HTML（独立页面）
+│  │  ├─ periodic-table.css     元素周期表样式
+│  │  └─ periodic-table.tsx     读取 data/PeriodicTable.csv 渲染表格的 React 入口
 ├─ tests/
 │  ├─ composition.test.ts      原子量覆盖与两种比例计算测试
 │  ├─ sector.test.tsx          饼图扇区/标签的静态渲染测试
 │  └─ search.test.ts           搜索匹配逻辑测试
 ├─ scripts/
-│  └─ inline-build.mjs         构建后把 JS/CSS 内联成单文件
+│  ├─ dev-routes.ts         开发时把 /periodic-table 重写到 src/pages/periodic-table.html
+│  └─ inline-build.mjs         按页构建（单 chunk）并把 JS/CSS 内联成单文件
 ├─ TASK.md                     开发过程记录
 ├─ vite.config.ts              Vite + Vitest 配置
 └─ tsconfig.json               TypeScript 配置（含 src、tests、vite.config.ts）
@@ -150,9 +164,11 @@ interface Material {
 
 `PALETTE` 在模块加载时按元素顺序自动赋给 `element.color`，所以晶格和饼图用的是同一套颜色。
 
-新增材料：在 `MATERIALS` 里追加一项，按需补上 `smiles`，并在 `src/i18n.ts` 的 `zh` / `en` 资源里补上名称和 `desc.<name>` 对应的文案即可。
+新增材料：在 `MATERIALS` 里追加一项，按需补上 `smiles`，并在 `src/locales/material-cards/` 的 `zh.json` / `en.json` 里补上名称和 `desc.<name>` 对应的文案即可。
 
-新增界面语言：在 `resources` 里加一套翻译，并把 `Lang` 类型扩展成新的语言代码。
+i18n 按页分命名空间：`material-cards`（首页）与 `periodic-table`（元素周期表），各自一份 `zh.json` / `en.json`；`src/i18n.ts` 负责注册命名空间并设默认命名空间，页面用 `useTranslation('periodic-table')` 之类的调用取自己的文案。中英文切换按钮是 `components/language-button.tsx`，两个页面共用。
+
+新增界面语言：在 `resources` 里为每个命名空间加一套翻译，并把 `Lang` 类型扩展成新的语言代码。
 
 ## 测试
 
