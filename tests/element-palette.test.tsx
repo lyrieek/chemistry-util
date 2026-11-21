@@ -19,7 +19,7 @@ import enPeriodicTable from '../src/locales/periodic-table/en.json'
 
 const rows = parseCsv(readFileSync(new URL('../data/PeriodicTable.csv', import.meta.url), 'utf8'))
 
-async function renderView(): Promise<string> {
+async function renderView(options: { paletteId?: 'phase' | 'block'; temperature?: number } = {}): Promise<string> {
   const instance = i18n.createInstance()
   await instance.init({
     lng: 'zh',
@@ -32,7 +32,13 @@ async function renderView(): Promise<string> {
   })
   return renderToStaticMarkup(
     <I18nextProvider i18n={instance}>
-      <PeriodicView rows={rows} matchedNumbers={new Set(rows.map((row) => row.number))} searchActive={false} />
+      <PeriodicView
+        rows={rows}
+        matchedNumbers={new Set(rows.map((row) => row.number))}
+        searchActive={false}
+        paletteId={options.paletteId}
+        temperature={options.temperature}
+      />
     </I18nextProvider>,
   )
 }
@@ -55,7 +61,8 @@ describe('element palette', () => {
     expect(toneOfPhase('Liquid')).toBe('liquid')
     expect(toneOfPhase('Gas')).toBe('gas')
     expect(toneOfPhase('gas')).toBe('gas')
-    expect(toneOfPhase('Plasma')).toBe('unknown')
+    expect(toneOfPhase('Plasma')).toBe('plasma')
+    expect(toneOfPhase('plasma')).toBe('plasma')
     expect(toneOfPhase('')).toBe('unknown')
     expect(toneOfPhase()).toBe('unknown')
   })
@@ -81,7 +88,7 @@ describe('element palette', () => {
   })
 
   it('exposes a legend entry for each tone it paints', () => {
-    expect(PHASE_PALETTE.legend.map((item) => item.tone)).toEqual(['solid', 'liquid', 'gas'])
+    expect(PHASE_PALETTE.legend.map((item) => item.tone)).toEqual(['solid', 'liquid', 'gas', 'plasma', 'unknown'])
     for (const item of PHASE_PALETTE.legend) {
       expect(item.labelKey).toBe(`palette.phase.${item.tone}`)
     }
@@ -124,5 +131,13 @@ describe('element palette', () => {
     expect(cell(markup, '6')).toContain('data-tone="p"')
     expect(cell(markup, '26')).toContain('data-tone="d"')
     expect(cell(markup, '57')).toContain('data-tone="f"')
+  })
+
+  it('paints plasma cells with an ionization gradient at high temperature', async () => {
+    const markup = await renderView({ paletteId: 'phase', temperature: 6500 })
+    expect(cell(markup, '55')).toContain('data-tone="plasma"')
+    expect(cell(markup, '55')).toContain('--pt-ionization')
+    expect(cell(markup, '2')).toContain('data-tone="gas"')
+    expect(cell(markup, '105')).toContain('data-tone="unknown"')
   })
 })

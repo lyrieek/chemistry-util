@@ -39,6 +39,8 @@
       "Melting Point (K)": "熔点 (K)",
       "Boiling Point (K)": "沸点 (K)",
       "Electronegativity": "电负性 (鲍林)",
+      "First Ionization Energy (kJ/mol)": "第一电离能 (kJ/mol)",
+      "Ionization (est.)": "电离度（估算）",
       "Electron Affinity (kJ/mol)": "电子亲和能 (kJ/mol)",
       "Electron Configuration": "电子构型",
       "Atomic Radius (pm)": "原子半径 (pm)",
@@ -176,7 +178,9 @@
         "label": "相态",
         "solid": "固态",
         "liquid": "液态",
-        "gas": "气态"
+        "gas": "气态",
+        "plasma": "等离子体",
+        "unknown": "未知"
       },
       "block": {
         "label": "分区",

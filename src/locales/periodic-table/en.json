@@ -39,6 +39,8 @@
       "Melting Point (K)": "Melting Point (K)",
       "Boiling Point (K)": "Boiling Point (K)",
       "Electronegativity": "Electronegativity (Pauling)",
+      "First Ionization Energy (kJ/mol)": "First Ionization Energy (kJ/mol)",
+      "Ionization (est.)": "Ionization (est.)",
       "Electron Affinity (kJ/mol)": "Electron Affinity (kJ/mol)",
       "Electron Configuration": "Electron Configuration",
       "Atomic Radius (pm)": "Atomic Radius (pm)",
@@ -176,7 +178,9 @@
         "label": "Phase",
         "solid": "Solid",
         "liquid": "Liquid",
-        "gas": "Gas"
+        "gas": "Gas",
+        "plasma": "Plasma",
+        "unknown": "Unknown"
       },
       "block": {
         "label": "Block",

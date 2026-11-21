@@ -29,7 +29,8 @@
   --pt-tone-solid: #fbf4d2;
   --pt-tone-liquid: #d9edf8;
   --pt-tone-gas: #ddf5e2;
-  --pt-tone-unknown: var(--pt-cell);
+  --pt-tone-plasma: #f0d9f5;
+  --pt-tone-unknown: #e4e4e7;
 }
 
 [data-theme='dark'] .pt-grid[data-palette='phase'],
@@ -38,7 +39,8 @@
   --pt-tone-solid: #3a3518;
   --pt-tone-liquid: #12303a;
   --pt-tone-gas: #153321;
-  --pt-tone-unknown: var(--pt-cell);
+  --pt-tone-plasma: #3a1f4a;
+  --pt-tone-unknown: #3f3f46;
 }
 
 .pt-grid[data-palette='block'],
@@ -417,6 +419,14 @@ h1 {
   background: var(--pt-tone-gas, var(--pt-cell));
 }
 
+.pt-phase-swatch-color[data-tone='plasma'] {
+  background: var(--pt-tone-plasma, var(--pt-cell));
+}
+
+.pt-phase-swatch-color[data-tone='unknown'] {
+  background: var(--pt-tone-unknown, var(--pt-cell));
+}
+
 .pt-phase-swatch-color[data-tone='s'] {
   background: var(--pt-tone-s, var(--pt-cell));
 }
@@ -577,7 +587,22 @@ h1 {
 }
 
 .pt-cell[data-tone='gas'] {
-  background: var(--pt-tone-gas, var(--pt-cell));
+  --pt-ionization: 0;
+}
+
+.pt-cell[data-tone='plasma'] {
+  --pt-ionization: 1;
+}
+
+.pt-cell[data-tone='gas'],
+.pt-cell[data-tone='plasma'] {
+  background: linear-gradient(
+    135deg,
+    var(--pt-tone-gas) 0%,
+    var(--pt-tone-gas) calc((1 - var(--pt-ionization)) * 100%),
+    var(--pt-tone-plasma) calc((1 - var(--pt-ionization)) * 100%),
+    var(--pt-tone-plasma) 100%
+  );
 }
 
 .pt-cell[data-tone='s'] {
@@ -880,6 +905,14 @@ h1 {
 
 .pt-card-phase-dot[data-tone='gas'] {
   background: var(--pt-tone-gas, var(--pt-cell));
+}
+
+.pt-card-phase-dot[data-tone='plasma'] {
+  background: var(--pt-tone-plasma, var(--pt-cell));
+}
+
+.pt-card-phase-dot[data-tone='unknown'] {
+  background: var(--pt-tone-unknown, var(--pt-cell));
 }
 
 .pt-card-radii {

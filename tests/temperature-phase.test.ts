@@ -7,6 +7,7 @@ import {
   PHASE_PALETTE,
   ROOM_TEMPERATURE_K,
   TEMPERATURE_STEP_K,
+  ionizationFraction,
   phaseAtTemperature,
   toneOfPhase,
 } from '../src/utils/element-palette'
@@ -49,12 +50,31 @@ describe('phase at temperature', () => {
     expect(phaseOf('Hg', 200)).toBe('solid')
   })
 
-  it('falls back to the data phase when both transition points are missing', () => {
+  it('does not extrapolate a missing phase to high temperature', () => {
     const dubnium = rowOf('Db')
     expect(dubnium.melt).toBe('')
     expect(dubnium.boil).toBe('')
-    expect(phaseOf('Db', 1000)).toBe(toneOfPhase(dubnium.phase))
-    expect(phaseOf('Db', 1000)).toBe('solid')
+    expect(phaseOf('Db', ROOM_TEMPERATURE_K)).toBe(toneOfPhase(dubnium.phase))
+    expect(phaseOf('Db', 1000)).toBe('unknown')
+    expect(phaseOf('Db', 6500)).toBe('unknown')
+  })
+
+  it('does not keep melt-only elements liquid at high temperature', () => {
+    expect(phaseOf('C', 6500)).toBe('unknown')
+    expect(phaseOf('P', 6500)).toBe('unknown')
+  })
+
+  it('uses the Saha ionization fraction to mark plasma above the boiling point', () => {
+    expect(phaseOf('Cs', 6500)).toBe('plasma')
+    expect(phaseOf('Fe', 6500)).toBe('plasma')
+    expect(phaseOf('Fe', 4000)).toBe('gas')
+    expect(phaseOf('He', 6500)).toBe('gas')
+  })
+
+  it('estimates ionization from the first ionization energy', () => {
+    expect(ionizationFraction(rowOf('Cs'), 6500)).toBeGreaterThan(0.5)
+    expect(ionizationFraction(rowOf('He'), 6500)).toBeLessThan(0.01)
+    expect(ionizationFraction(rowOf('Db'), 6500)).toBeNull()
   })
 
   it('exposes a slider range that covers room temperature and the hottest boiling point', () => {

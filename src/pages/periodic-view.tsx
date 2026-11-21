@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PERIODIC_TABLE_NS } from '../i18n-ns'
 import type { CsvRow } from '../utils/csv-utils'
 import { categoryKeyOf } from '../utils/element-labels'
-import { DEFAULT_PALETTE_ID, getElementPalette, type PaletteId } from '../utils/element-palette'
+import { DEFAULT_PALETTE_ID, getElementPalette, ionizationFraction, type PaletteId } from '../utils/element-palette'
 import { radiusExtentsOf } from '../utils/element-radii'
 import { formatNumber } from '../utils/number-format'
 import { isPeriodicElement, layoutOf, type Series } from '../utils/periodic-layout'
@@ -119,7 +119,13 @@ export function PeriodicView({ rows, matchedNumbers, searchActive, paletteId = D
           const categoryKey = categoryKeyOf(row)
           const category = categoryKey ? t(`category.${categoryKey}`, { defaultValue: row.category }) : row.category
           const tone = palette.toneOf(row, temperature)
-          const phaseLabel = phasePalette && (tone === 'solid' || tone === 'liquid' || tone === 'gas') ? t(`palette.phase.${tone}`) : ''
+          const fraction = phasePalette && typeof temperature === 'number' ? ionizationFraction(row, temperature) : null
+          // 用平方根放大低电离度，让弱电离也能在渐变里看出来。
+          const ionization = fraction === null ? 0 : Math.sqrt(Math.min(1, Math.max(0, fraction)))
+          const phaseLabel =
+            phasePalette && (tone === 'solid' || tone === 'liquid' || tone === 'gas' || tone === 'plasma' || tone === 'unknown')
+              ? t(`palette.phase.${tone}`)
+              : ''
           const ariaLabel = [`${name} ${row.symbol}`, `${t('fields.Number')} ${row.number}`, category, phaseLabel]
             .filter((part) => part !== '')
             .join(', ')
@@ -129,7 +135,13 @@ export function PeriodicView({ rows, matchedNumbers, searchActive, paletteId = D
               key={row.number}
               type="button"
               className={cellClassName(isMatch, isDimmed, isSelected, isSeriesHighlighted)}
-              style={{ gridColumn: position.column + 1, gridRow: position.row + 1 }}
+              style={
+                {
+                  gridColumn: position.column + 1,
+                  gridRow: position.row + 1,
+                  '--pt-ionization': ionization,
+                } as CSSProperties
+              }
               aria-label={ariaLabel}
               aria-pressed={isSelected}
               data-tone={tone}

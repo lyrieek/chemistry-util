@@ -2,7 +2,7 @@ import type { CsvRow } from './csv-utils'
 import { ACTINIDE_RANGE, LANTHANIDE_RANGE } from './periodic-layout'
 
 /** 色盘点亮单元格时使用的色调令牌；新增色盘时按需扩展。 */
-export type ElementTone = 's' | 'p' | 'd' | 'f' | 'solid' | 'liquid' | 'gas' | 'unknown'
+export type ElementTone = 's' | 'p' | 'd' | 'f' | 'solid' | 'liquid' | 'gas' | 'plasma' | 'unknown'
 
 export type PaletteId = 'phase' | 'block'
 
@@ -77,6 +77,8 @@ export function toneOfPhase(phase?: string): ElementTone {
       return 'liquid'
     case 'gas':
       return 'gas'
+    case 'plasma':
+      return 'plasma'
     default:
       return 'unknown'
   }
@@ -97,14 +99,52 @@ function parseTemperature(value?: string): number | null {
   return Number.isFinite(parsed) ? parsed : null
 }
 
+/** 玻尔兹曼常数（eV/K），用于把第一电离能换算成温标。 */
+const KB_EV_PER_K = 8.617333262e-5
+/** kJ/mol → eV。 */
+const KJ_PER_MOL_TO_EV = 1 / 96.485332
+/** 标准大气压（Pa），Saha 估算以此为参考压力。 */
+const STANDARD_PRESSURE_PA = 101325
+/** 电子质量（kg）。 */
+const ELECTRON_MASS = 9.1093837015e-31
+/** 玻尔兹曼常数（J/K）。 */
+const BOLTZMANN = 1.380649e-23
+/** 普朗克常数（J·s）。 */
+const PLANCK = 6.62607015e-34
+/** 电离度达到该比例即视为等离子体（弱电离等离子体）。 */
+export const PLASMA_IONIZATION_FRACTION = 0.01
+
+/**
+ * 用 Saha 方程估算 1 atm 下的电离度（0–1）。
+ * 只取第一电离能；电子自旋权重取 2，原子/离子配分函数近似为 1。数据缺失时返回 null。
+ */
+export function ionizationFraction(row: CsvRow, temperature: number): number | null {
+  const ionization = parseTemperature(row.ionization_energy)
+  if (ionization === null || temperature <= 0) return null
+
+  const chiEv = ionization * KJ_PER_MOL_TO_EV
+  const ktEv = KB_EV_PER_K * temperature
+  const numberDensity = STANDARD_PRESSURE_PA / (BOLTZMANN * temperature)
+  const quantumConcentration = 2 * ((2 * Math.PI * ELECTRON_MASS * BOLTZMANN * temperature) / (PLANCK * PLANCK)) ** 1.5
+  const saha = (quantumConcentration / numberDensity) * Math.exp(-chiEv / ktEv)
+  // x² / (1 - x) = saha
+  return (Math.sqrt(saha * saha + 4 * saha) - saha) / 2
+}
+
 /**
  * 按给定温度（K）判断相态：
+ * - 高于沸点且 Saha 电离度 ≥ 1%：等离子体。
  * - 低于熔点：固态；熔点与沸点之间：液态；高于沸点：气态。
- * - 缺少熔点或沸点时按已知的一侧推断；两者都缺失时回落到数据里的常温相态。
+ * - 缺少熔点或沸点时按已知的一侧推断；两者都缺失时，常温沿用数据相态，更高温度返回未知。
  */
 export function phaseAtTemperature(row: CsvRow, temperature: number): ElementTone {
   const melt = parseTemperature(row.melt)
   const boil = parseTemperature(row.boil)
+
+  const fraction = ionizationFraction(row, temperature)
+  if (fraction !== null && fraction >= PLASMA_IONIZATION_FRACTION && (boil === null || temperature >= boil)) {
+    return 'plasma'
+  }
 
   if (melt !== null && boil !== null) {
     if (temperature < melt) return 'solid'
@@ -112,12 +152,22 @@ export function phaseAtTemperature(row: CsvRow, temperature: number): ElementTon
     return 'gas'
   }
 
-  if (melt !== null) return temperature < melt ? 'solid' : 'liquid'
-  if (boil !== null) return temperature < boil ? 'solid' : 'gas'
-  return toneOfPhase(row.phase)
+  if (melt !== null) {
+    if (temperature < melt) return 'solid'
+    // 没有沸点数据时不把液态外推到任意高温。
+    return 'unknown'
+  }
+
+  if (boil !== null) {
+    return temperature < boil ? 'solid' : 'gas'
+  }
+
+  // 熔点、沸点都缺失：常温沿用数据相态，更高温度只能标未知。
+  if (temperature <= ROOM_TEMPERATURE_K) return toneOfPhase(row.phase)
+  return 'unknown'
 }
 
-/** 按常温相态上色：固态浅黄、液态浅蓝、气态浅绿。 */
+/** 按常温相态上色：固态浅黄、液态浅蓝、气态浅绿、等离子体淡紫、未知灰色。 */
 export const PHASE_PALETTE = new ElementPalette(
   'phase',
   'palette.phase.label',
@@ -125,6 +175,8 @@ export const PHASE_PALETTE = new ElementPalette(
     { tone: 'solid', labelKey: 'palette.phase.solid' },
     { tone: 'liquid', labelKey: 'palette.phase.liquid' },
     { tone: 'gas', labelKey: 'palette.phase.gas' },
+    { tone: 'plasma', labelKey: 'palette.phase.plasma' },
+    { tone: 'unknown', labelKey: 'palette.phase.unknown' },
   ],
   (row, temperature) => (typeof temperature === 'number' ? phaseAtTemperature(row, temperature) : toneOfPhase(row.phase)),
 )

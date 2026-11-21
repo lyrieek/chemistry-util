@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { PERIODIC_TABLE_NS } from '../i18n-ns'
 import type { CsvRow } from '../utils/csv-utils'
 import { categoryKeyOf } from '../utils/element-labels'
-import { phaseAtTemperature, toneOfPhase, type ElementTone } from '../utils/element-palette'
+import { ionizationFraction, phaseAtTemperature, toneOfPhase, type ElementTone } from '../utils/element-palette'
 import { radiusOf, type RadiusExtents } from '../utils/element-radii'
 import { formatNumber, formatNumericValue } from '../utils/number-format'
 
@@ -36,6 +36,13 @@ function displayText(value: string | undefined): string {
 
 function phaseToneOf(row: CsvRow, temperature?: number): ElementTone {
   return typeof temperature === 'number' ? phaseAtTemperature(row, temperature) : toneOfPhase(row.phase)
+}
+
+function formatIonization(fraction: number | null, temperature?: number): string {
+  if (typeof temperature !== 'number' || fraction === null) return EMPTY
+  const percent = fraction * 100
+  if (percent < 0.01) return '0%'
+  return `${percent.toFixed(percent < 1 ? 2 : 1)}%`
 }
 
 /** 甜甜圈：浅色固定外圈 = 全体元素的最大半径，深色内圈 = 当前元素半径。 */
@@ -74,10 +81,9 @@ export function PeriodicTableCard({ row, temperature, radiusExtents, onClose }: 
   const categoryKey = categoryKeyOf(row)
   const category = categoryKey ? t(`category.${categoryKey}`, { defaultValue: row.category }) : row.category
   const tone = phaseToneOf(row, temperature)
-  const phase =
-    tone === 'solid' || tone === 'liquid' || tone === 'gas'
-      ? t(`palette.phase.${tone}`)
-      : t(`valTypes.${row.phase}`, { defaultValue: row.phase || EMPTY })
+  const fraction = typeof temperature === 'number' ? ionizationFraction(row, temperature) : null
+  const ionizationLabel = formatIonization(fraction, temperature)
+  const phase = tone === 'solid' || tone === 'liquid' || tone === 'gas' || tone === 'plasma' ? t(`palette.phase.${tone}`) : t('palette.phase.unknown')
   const missingRadiusLabel = Number(row.number) >= 97 ? t('no bulk crystal') : t('no radius data')
 
   return (
@@ -137,6 +143,14 @@ export function PeriodicTableCard({ row, temperature, radiusExtents, onClose }: 
         <div className="pt-card-field">
           <dt>{t('fields.Electronegativity')}</dt>
           <dd>{displayNumber(row.electronegativity_pauling)}</dd>
+        </div>
+        <div className="pt-card-field">
+          <dt>{t('fields.First Ionization Energy (kJ/mol)')}</dt>
+          <dd>{displayNumber(row.ionization_energy)}</dd>
+        </div>
+        <div className="pt-card-field">
+          <dt>{t('fields.Ionization (est.)')}</dt>
+          <dd>{ionizationLabel}</dd>
         </div>
       </dl>
 
