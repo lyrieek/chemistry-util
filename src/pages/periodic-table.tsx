@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
 import csvText from '../../data/PeriodicTable.csv?raw'
@@ -27,6 +27,8 @@ const COLUMNS: readonly Column[] = [
   { key: 'atomic_radii.empirical', label: 'Atomic Radius (pm)', numeric: true },
   { key: 'atomic_radii.covalent_single', label: 'Covalent Radius (pm)', numeric: true },
 ] satisfies readonly Column[]
+
+const DEFAULT_HIDDEN: readonly string[] = ['appearance', 'electronegativity_pauling', 'electron_configuration_semantic', 'density_g_cm3']
 
 const NUMBER_PATTERN = /-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g
 
@@ -59,6 +61,38 @@ function Page() {
     key: 'number',
     dir: 'asc',
   })
+  const [hidden, setHidden] = useState<readonly string[]>(DEFAULT_HIDDEN)
+  const [columnsOpen, setColumnsOpen] = useState(false)
+  const filterRef = useRef<HTMLDivElement>(null)
+
+  const columns = useMemo(() => COLUMNS.filter((column) => !hidden.includes(column.key)), [hidden])
+  const allShown = hidden.length === 0
+
+  useEffect(() => {
+    if (!columnsOpen) return
+    const onPointerDown = (event: PointerEvent) => {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) setColumnsOpen(false)
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setColumnsOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [columnsOpen])
+
+  const toggleColumn = (key: string) => {
+    const next = hidden.includes(key) ? hidden.filter((hiddenKey) => hiddenKey !== key) : [...hidden, key]
+    if (next.length >= COLUMNS.length) return
+    setHidden(next)
+    if (sort && next.includes(sort.key)) {
+      const fallback = COLUMNS.find((column) => !next.includes(column.key))
+      setSort(fallback ? { key: fallback.key, dir: 'asc' } : null)
+    }
+  }
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase()
@@ -88,6 +122,42 @@ function Page() {
       <h1>{t('Periodic Table')}</h1>
       <div className="pt-toolbar">
         <input className="pt-search" placeholder={t('Search elements')} value={query} onChange={(e) => setQuery(e.currentTarget.value)} />
+        <div className="pt-filter" ref={filterRef}>
+          <button
+            type="button"
+            className={allShown ? 'pt-filter-button' : 'pt-filter-button is-active'}
+            aria-label={t('Columns')}
+            aria-haspopup="true"
+            aria-expanded={columnsOpen}
+            onClick={() => setColumnsOpen((open) => !open)}
+          >
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+              <path d="M2 3h12l-4.6 5.4v3.9L6.6 14V8.4L2 3Z" fill="currentColor" />
+            </svg>
+          </button>
+          {columnsOpen && (
+            <div className="pt-popover" role="group" aria-label={t('Columns')}>
+              <div className="pt-popover-head">
+                <span>{t('Columns')}</span>
+                <button type="button" className="pt-popover-reset" onClick={() => setHidden(DEFAULT_HIDDEN)}>
+                  {t('Reset')}
+                </button>
+              </div>
+              <div className="pt-popover-list">
+                {COLUMNS.map((column) => {
+                  const checked = !hidden.includes(column.key)
+                  const lastOne = checked && columns.length === 1
+                  return (
+                    <label key={column.key} className="pt-popover-item">
+                      <input type="checkbox" checked={checked} disabled={lastOne} onChange={() => toggleColumn(column.key)} />
+                      <span>{t(`fields.${column.label}`)}</span>
+                    </label>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </div>
         <span className="pt-count">{t('Elements count', { n: sorted.length, total: rows.length })}</span>
         <LanguageButton className="pt-lang-button" label={t('Switch language')} />
       </div>
@@ -95,7 +165,7 @@ function Page() {
         <table className="pt-table">
           <thead>
             <tr>
-              {COLUMNS.map((column) => (
+              {columns.map((column) => (
                 <th
                   key={column.key}
                   onClick={() =>
@@ -115,7 +185,7 @@ function Page() {
           <tbody>
             {sorted.map((row) => (
               <tr key={row.number}>
-                {COLUMNS.map((column) => (
+                {columns.map((column) => (
                   <td key={column.key} className={column.numeric ? 'pt-numeric' : ''}>
                     {cellText(column, row[column.key] ?? '')}
                   </td>

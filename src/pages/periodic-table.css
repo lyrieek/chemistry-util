@@ -50,7 +50,7 @@ h1 {
 }
 
 .pt-search {
-  min-width: 260px;
+  min-width: 310px;
   padding: 8px 12px;
   border: 1px solid var(--pt-line);
   border-radius: 8px;
@@ -64,8 +64,114 @@ h1 {
   border-color: var(--pt-accent);
 }
 
-.pt-count {
+.pt-filter {
+  position: relative;
   margin-left: auto;
+  display: inline-flex;
+}
+
+.pt-filter-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 31px;
+  height: 31px;
+  padding: 0;
+  color: var(--pt-ink-soft);
+  background: var(--pt-surface);
+  border: 1px solid var(--pt-line);
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.pt-filter-button:hover,
+.pt-filter-button[aria-expanded='true'] {
+  color: var(--pt-accent);
+  border-color: var(--pt-accent);
+}
+
+.pt-filter-button:focus-visible {
+  outline: 2px solid var(--pt-accent);
+  outline-offset: 2px;
+}
+
+.pt-filter-button.is-active {
+  color: var(--pt-accent);
+  border-color: var(--pt-accent);
+  background: rgba(14, 124, 134, 0.08);
+}
+
+.pt-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  width: 216px;
+  padding: 10px;
+  background: var(--pt-bg);
+  border: 1px solid var(--pt-line);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(16, 36, 42, 0.16);
+}
+
+.pt-popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 6px 8px;
+  color: var(--pt-ink-soft);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.pt-popover-reset {
+  padding: 2px 6px;
+  color: var(--pt-accent);
+  background: none;
+  border: none;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pt-popover-reset:hover {
+  background: rgba(14, 124, 134, 0.1);
+}
+
+.pt-popover-list {
+  max-height: 296px;
+  overflow-y: auto;
+}
+
+.pt-popover-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--pt-ink);
+  cursor: pointer;
+}
+
+.pt-popover-item:hover {
+  background: var(--pt-surface);
+}
+
+.pt-popover-item input {
+  margin: 0;
+  accent-color: var(--pt-accent);
+  cursor: pointer;
+}
+
+.pt-count {
   color: var(--pt-ink-soft);
   font-size: 13px;
 }
