@@ -1,5 +1,7 @@
 {
   "translation": {
+    "title": "Chemistry util",
+    "description": "Interactive chemical-composition charts of common materials.",
     "Search": "Search",
     "Search materials": "Search materials",
     "Clear search": "Clear search",
@@ -15,6 +17,8 @@
     "Atomic ratio": "Atomic ratio",
     "Switch theme": "Switch theme",
     "Switch language": "Switch language",
+    "atom_one": "atom",
+    "atom_other": "atoms",
     "name": {
       "Water": "Water",
       "Table Salt": "Table Salt",
@@ -51,7 +55,7 @@
       "Steel": "Iron-carbon alloy",
       "Bronze": "Copper-tin alloy",
       "Stainless Steel": "Corrosion-resistant chromium steel",
-      "Lithium Phosphate": "One of lithium battery cathode materials",
+      "Lithium Phosphate": "Lithium battery electrolyte material",
       "Aluminum Oxide": "Aluminum oxide, corundum component",
       "Silicon Carbide": "Silicon carbide, carborundum",
       "Cantor Alloy": "Five-element high-entropy alloy",

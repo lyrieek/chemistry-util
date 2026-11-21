@@ -13,6 +13,7 @@ export interface SectorProps {
   outerRadius: number
   setHovered: (v: number | null) => void
   basisLabel: string
+  atomLabel?: (n: number) => string
 }
 
 export interface SectorLabelProps {
@@ -52,8 +53,9 @@ export function layoutSectorLabel(arc: SectorArc, element: ElementProportion, ou
   }
 }
 
-export function Sector({ arc, element, i, outerRadius, setHovered, basisLabel }: SectorProps) {
-  const label = `${element.sym}: ${element.n} atom${element.n > 1 ? 's' : ''} (${formatPercentage(element.pct)}% ${basisLabel})`
+export function Sector({ arc, element, i, outerRadius, setHovered, basisLabel, atomLabel }: SectorProps) {
+  const countLabel = atomLabel ?? ((n: number) => `${n} atom${n > 1 ? 's' : ''}`)
+  const label = `${element.sym}: ${countLabel(element.n)} (${formatPercentage(element.pct)}% ${basisLabel})`
   return (
     <g>
       <title>{label}</title>

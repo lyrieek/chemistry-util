@@ -91,7 +91,7 @@ function LatticeIcon() {
   )
 }
 
-function PieChart({ elements, basisLabel }: { elements: ElementProportion[]; basisLabel: string }) {
+function PieChart({ elements, basisLabel, atomLabel }: { elements: ElementProportion[]; basisLabel: string; atomLabel: (n: number) => string }) {
   const [hovered, setHovered] = useState<number | null>(null)
   const animatedElements = useAnimatedPercentages(elements)
   const outerRadius = R
@@ -120,6 +120,7 @@ function PieChart({ elements, basisLabel }: { elements: ElementProportion[]; bas
                     outerRadius={outerRadius}
                     setHovered={setHovered}
                     basisLabel={basisLabel}
+                    atomLabel={atomLabel}
                   />
                 )
               })}
@@ -137,7 +138,7 @@ function PieChart({ elements, basisLabel }: { elements: ElementProportion[]; bas
   )
 }
 
-function Card({ m, view, basis }: { m: Material; view: ViewMode; basis: CompositionBasis }) {
+function Card({ m, view, basis, atomLabel }: { m: Material; view: ViewMode; basis: CompositionBasis; atomLabel: (n: number) => string }) {
   const { t } = useTranslation()
   const elements = calculatePercentages(m.elements, basis)
   const basisLabel = t(basis === 'mass' ? 'Mass ratio' : 'Atomic ratio')
@@ -152,7 +153,7 @@ function Card({ m, view, basis }: { m: Material; view: ViewMode; basis: Composit
       </div>
       <div className={view === 'pie' ? 'pie-wrap' : 'pie-wrap lattice-wrap'}>
         {view === 'pie' ? (
-          <PieChart elements={elements} basisLabel={basisLabel} />
+          <PieChart elements={elements} basisLabel={basisLabel} atomLabel={atomLabel} />
         ) : (
           <Lattice elements={elements} seedKey={m.name} basisLabel={basisLabel} />
         )}
@@ -162,12 +163,13 @@ function Card({ m, view, basis }: { m: Material; view: ViewMode; basis: Composit
 }
 
 export default function App() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [view, setView] = useState<ViewMode>('pie')
   const [basis, setBasis] = useState<CompositionBasisOption>('mass')
   const [theme, setTheme] = useState<Theme>(initialTheme)
   const [search, setSearch] = useState('')
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
+  const atomLabel = (n: number) => `${n} ${t('atom', { count: n })}`
   const materials = search.trim()
     ? MATERIALS.filter((m) => materialMatches(m, search, [m.name, t(`name.${m.name}`, { lng: 'zh' }), t(`name.${m.name}`, { lng: 'en' })]))
     : MATERIALS
@@ -180,6 +182,11 @@ export default function App() {
       /* 隐私模式下写入失败可以忽略 */
     }
   }, [theme])
+
+  useEffect(() => {
+    document.title = t('title')
+    document.querySelector('meta[name="description"]')?.setAttribute('content', t('description'))
+  }, [t, i18n.language])
 
   return (
     <>
@@ -236,7 +243,7 @@ export default function App() {
       {materials.length > 0 ? (
         <div className="composition-grid">
           {materials.map((m) => (
-            <Card key={m.name} m={m} view={view} basis={basis} />
+            <Card key={m.name} m={m} view={view} basis={basis} atomLabel={atomLabel} />
           ))}
         </div>
       ) : (

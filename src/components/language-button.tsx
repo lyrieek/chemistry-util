@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import type { Lang } from '../i18n'
+import { changeLanguage, type Lang } from '../i18n'
 
 type LanguageButtonProps = {
   label: string
@@ -10,9 +10,9 @@ export function LanguageButton({ label, className }: LanguageButtonProps) {
   const { i18n } = useTranslation()
 
   const toggle = () => {
-    const next: Lang = i18n.language === 'zh' ? 'en' : 'zh'
-    document.documentElement.lang = next
-    i18n.changeLanguage(next)
+    const current = i18n.resolvedLanguage ?? i18n.language
+    const next: Lang = current.startsWith('zh') ? 'en' : 'zh'
+    changeLanguage(next)
   }
 
   return (

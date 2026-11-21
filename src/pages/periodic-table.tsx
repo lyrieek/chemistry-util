@@ -1,88 +1,98 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
 import csvText from '../../data/PeriodicTable.csv?raw'
 import { LanguageButton } from '../components/language-button'
-import { PERIODIC_TABLE_NS } from '../i18n'
+import { Popover, PopoverAction, PopoverHeading, PopoverItem, PopoverList } from '../components/popover'
+import { Slider } from '../components/slider'
+import { PERIODIC_TABLE_NS } from '../i18n-ns'
 import { parseCsv } from '../utils/csv-utils'
+import { DEFAULT_PALETTE_ID, ELEMENT_PALETTES, type PaletteId } from '../utils/element-palette'
+import { elementMatches } from '../utils/element-search'
+import { sortNumber } from '../utils/number-format'
+import { isPeriodicElement } from '../utils/periodic-layout'
+import { PeriodicView } from './periodic-view'
+import { COLUMNS, DEFAULT_HIDDEN, TableView, type SortState } from './table-view'
 
-type Column = { key: string; label: string; numeric?: boolean; translateValue?: boolean }
+type View = 'table' | 'periodic'
 
-const COLUMNS: readonly Column[] = [
-  { key: 'number', label: 'Number', numeric: true },
-  { key: 'symbol', label: 'Symbol' },
-  { key: 'name', label: 'Name' },
-  { key: 'atomic_mass', label: 'Atomic Mass', numeric: true },
-  { key: 'category', label: 'Category' },
-  { key: 'group', label: 'Group', numeric: true },
-  { key: 'period', label: 'Period', numeric: true },
-  { key: 'phase', label: 'Phase', translateValue: true },
-  { key: 'appearance', label: 'Appearance' },
-  { key: 'density_g_cm3', label: 'Density (g/cm³)', numeric: true },
-  { key: 'melt', label: 'Melting Point (K)', numeric: true },
-  { key: 'boil', label: 'Boiling Point (K)', numeric: true },
-  { key: 'electronegativity_pauling', label: 'Electronegativity', numeric: true },
-  { key: 'electron_affinity', label: 'Electron Affinity (kJ/mol)', numeric: true },
-  { key: 'electron_configuration_semantic', label: 'Electron Configuration' },
-  { key: 'atomic_radii.empirical', label: 'Atomic Radius (pm)', numeric: true },
-  { key: 'atomic_radii.covalent_single', label: 'Covalent Radius (pm)', numeric: true },
-] satisfies readonly Column[]
+const VIEW_STORAGE_KEY = 'pt-view'
 
-const DEFAULT_HIDDEN: readonly string[] = ['appearance', 'electronegativity_pauling', 'electron_configuration_semantic', 'density_g_cm3']
-
-const NUMBER_PATTERN = /-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g
-
-function formatNumber(value: string): string {
-  if (value.trim() === '') return value
-  const num = Number(value)
-  if (!Number.isFinite(num)) return value
-  if (Number.isInteger(num)) return String(num)
-  const abs = Math.abs(num)
-  if (abs >= 1000) return num.toFixed(1)
-  if (abs >= 0.001) return num.toFixed(3)
-  return num.toExponential(2)
+function storedView(): View {
+  try {
+    const saved = localStorage.getItem(VIEW_STORAGE_KEY)
+    if (saved === 'table' || saved === 'periodic') return saved
+  } catch {
+    /* file:// 或隐私模式下拿不到存储，回退默认视图 */
+  }
+  return 'table'
 }
 
-function formatValue(column: Column, value: string): string {
-  if (!column.numeric || value === '') return value
-  return value.replaceAll('[', '').replaceAll(']', '').replaceAll(NUMBER_PATTERN, formatNumber)
+function TableIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <rect x="2" y="2.5" width="12" height="11" rx="2" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M2 6h12M2 9.7h12M6.2 2.5v11M9.8 2.5v11" stroke="currentColor" strokeWidth="1.1" opacity="0.8" />
+    </svg>
+  )
 }
 
-function sortNumber(value: string): number {
-  const match = value.match(NUMBER_PATTERN)
-  return match === null || match.length === 0 ? Number.NaN : Number(match[0])
+function PeriodicIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <rect x="1.5" y="1.5" width="3" height="3" rx="0.8" fill="currentColor" />
+      <rect x="11.5" y="1.5" width="3" height="3" rx="0.8" fill="currentColor" />
+      <rect x="1.5" y="5.5" width="3" height="3" rx="0.8" fill="currentColor" opacity="0.78" />
+      <rect x="6.5" y="5.5" width="3" height="3" rx="0.8" fill="currentColor" opacity="0.78" />
+      <rect x="11.5" y="5.5" width="3" height="3" rx="0.8" fill="currentColor" opacity="0.78" />
+      <rect x="1.5" y="9.5" width="3" height="3" rx="0.8" fill="currentColor" opacity="0.56" />
+      <rect x="6.5" y="9.5" width="3" height="3" rx="0.8" fill="currentColor" opacity="0.56" />
+      <rect x="11.5" y="9.5" width="3" height="3" rx="0.8" fill="currentColor" opacity="0.56" />
+      <rect x="4.5" y="13.3" width="2.6" height="1.4" rx="0.6" fill="currentColor" opacity="0.42" />
+      <rect x="8.9" y="13.3" width="2.6" height="1.4" rx="0.6" fill="currentColor" opacity="0.42" />
+    </svg>
+  )
 }
+
+function PaletteIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.4" fill="currentColor" opacity="0.9" />
+      <rect x="9" y="1.5" width="5.5" height="5.5" rx="1.4" fill="currentColor" opacity="0.55" />
+      <rect x="1.5" y="9" width="5.5" height="5.5" rx="1.4" fill="currentColor" opacity="0.55" />
+      <rect x="9" y="9" width="5.5" height="5.5" rx="1.4" fill="currentColor" opacity="0.3" />
+    </svg>
+  )
+}
+
+const VIEW_OPTIONS = [
+  { value: 'table', icon: TableIcon, label: 'Data table' },
+  { value: 'periodic', icon: PeriodicIcon, label: 'Periodic table' },
+] as const
 
 function Page() {
-  const { t } = useTranslation(PERIODIC_TABLE_NS)
+  const { t, i18n } = useTranslation(PERIODIC_TABLE_NS)
   const rows = useMemo(() => parseCsv(csvText), [])
+  const periodicRows = useMemo(() => rows.filter((row) => isPeriodicElement(row)), [rows])
   const [query, setQuery] = useState('')
-  const [sort, setSort] = useState<{ key: string; dir: 'asc' | 'desc' } | null>({
-    key: 'number',
-    dir: 'asc',
-  })
+  const [sort, setSort] = useState<SortState>({ key: 'number', dir: 'asc' })
   const [hidden, setHidden] = useState<readonly string[]>(DEFAULT_HIDDEN)
   const [columnsOpen, setColumnsOpen] = useState(false)
-  const filterRef = useRef<HTMLDivElement>(null)
+  const [view, setView] = useState<View>(storedView)
+  const [paletteId, setPaletteId] = useState<PaletteId>(DEFAULT_PALETTE_ID)
+  const [paletteOpen, setPaletteOpen] = useState(false)
+  const viewRows = view === 'periodic' ? periodicRows : rows
 
   const columns = useMemo(() => COLUMNS.filter((column) => !hidden.includes(column.key)), [hidden])
   const allShown = hidden.length === 0
 
   useEffect(() => {
-    if (!columnsOpen) return
-    const onPointerDown = (event: PointerEvent) => {
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) setColumnsOpen(false)
+    try {
+      localStorage.setItem(VIEW_STORAGE_KEY, view)
+    } catch {
+      /* 隐私模式下写入失败可以忽略 */
     }
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setColumnsOpen(false)
-    }
-    document.addEventListener('pointerdown', onPointerDown)
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown)
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, [columnsOpen])
+  }, [view])
 
   const toggleColumn = (key: string) => {
     const next = hidden.includes(key) ? hidden.filter((hiddenKey) => hiddenKey !== key) : [...hidden, key]
@@ -95,9 +105,11 @@ function Page() {
   }
 
   const filtered = useMemo(() => {
-    const q = query.toLowerCase()
-    return rows.filter((row) => row.name.toLowerCase().includes(q) || row.symbol.toLowerCase().includes(q) || row.number.toLowerCase().includes(q))
-  }, [rows, query])
+    if (query.trim() === '') return viewRows
+    return viewRows.filter((row) =>
+      elementMatches(row, query, [t(`element.${row.symbol}`, { lng: 'zh' }), t(`element.${row.symbol}`, { lng: 'en' })]),
+    )
+  }, [viewRows, query, t])
 
   const sorted = useMemo(() => {
     if (!sort) return filtered
@@ -114,87 +126,111 @@ function Page() {
     })
   }, [filtered, sort])
 
-  const cellText = (column: Column, value: string): string =>
-    column.translateValue && value !== '' ? t(`valTypes.${value}`, { defaultValue: value }) : formatValue(column, value)
+  const matchedNumbers = useMemo(() => new Set(filtered.map((row) => row.number)), [filtered])
+  const searchActive = query.trim() !== ''
+
+  const handleSort = (key: string) => {
+    setSort((previous): SortState => (previous && previous.key === key ? { key, dir: previous.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' }))
+  }
+
+  const changeView = (next: View) => {
+    setView(next)
+    if (next !== 'table') setColumnsOpen(false)
+  }
+
+  useEffect(() => {
+    document.title = t('Periodic Table')
+  }, [t, i18n.language])
+
+  const viewOptions = VIEW_OPTIONS.map((option) => {
+    const Icon = option.icon
+    return {
+      value: option.value,
+      label: (
+        <>
+          <Icon />
+          <span>{t(option.label)}</span>
+        </>
+      ),
+    }
+  })
 
   return (
     <div className="pt-page">
       <h1>{t('Periodic Table')}</h1>
-      <div className="pt-toolbar">
+      <div className={view === 'table' ? 'pt-toolbar' : 'pt-toolbar pt-toolbar--periodic'}>
         <input className="pt-search" placeholder={t('Search elements')} value={query} onChange={(e) => setQuery(e.currentTarget.value)} />
-        <div className="pt-filter" ref={filterRef}>
-          <button
-            type="button"
-            className={allShown ? 'pt-filter-button' : 'pt-filter-button is-active'}
-            aria-label={t('Columns')}
-            aria-haspopup="true"
-            aria-expanded={columnsOpen}
-            onClick={() => setColumnsOpen((open) => !open)}
+        {view === 'table' && (
+          <Popover
+            open={columnsOpen}
+            onOpenChange={setColumnsOpen}
+            label={t('Columns')}
+            className="pt-filter"
+            trigger={(triggerProps) => (
+              <button
+                type="button"
+                className={allShown ? 'pt-filter-button' : 'pt-filter-button is-active'}
+                aria-label={t('Columns')}
+                {...triggerProps}
+              >
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+                  <path d="M2 3h12l-4.6 5.4v3.9L6.6 14V8.4L2 3Z" fill="currentColor" />
+                </svg>
+              </button>
+            )}
           >
-            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
-              <path d="M2 3h12l-4.6 5.4v3.9L6.6 14V8.4L2 3Z" fill="currentColor" />
-            </svg>
-          </button>
-          {columnsOpen && (
-            <div className="pt-popover" role="group" aria-label={t('Columns')}>
-              <div className="pt-popover-head">
-                <span>{t('Columns')}</span>
-                <button type="button" className="pt-popover-reset" onClick={() => setHidden(DEFAULT_HIDDEN)}>
-                  {t('Reset')}
-                </button>
-              </div>
-              <div className="pt-popover-list">
-                {COLUMNS.map((column) => {
-                  const checked = !hidden.includes(column.key)
-                  const lastOne = checked && columns.length === 1
-                  return (
-                    <label key={column.key} className="pt-popover-item">
-                      <input type="checkbox" checked={checked} disabled={lastOne} onChange={() => toggleColumn(column.key)} />
-                      <span>{t(`fields.${column.label}`)}</span>
-                    </label>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-        </div>
-        <span className="pt-count">{t('Elements count', { n: sorted.length, total: rows.length })}</span>
+            <PopoverHeading title={t('Columns')} action={<PopoverAction onClick={() => setHidden(DEFAULT_HIDDEN)}>{t('Reset')}</PopoverAction>} />
+            <PopoverList>
+              {COLUMNS.map((column) => {
+                const checked = !hidden.includes(column.key)
+                const lastOne = checked && columns.length === 1
+                return (
+                  <PopoverItem key={column.key}>
+                    <input type="checkbox" checked={checked} disabled={lastOne} onChange={() => toggleColumn(column.key)} />
+                    <span>{t(`fields.${column.label}`)}</span>
+                  </PopoverItem>
+                )
+              })}
+            </PopoverList>
+          </Popover>
+        )}
+        <span className="pt-count">{t('Elements count', { n: filtered.length, total: viewRows.length })}</span>
+        <Slider className="pt-view-switch" ariaLabel={t('View')} value={view} onChange={changeView} options={viewOptions} />
+        {view === 'periodic' && (
+          <Popover
+            open={paletteOpen}
+            onOpenChange={setPaletteOpen}
+            label={t('palette.label')}
+            trigger={(triggerProps) => (
+              <button type="button" className="pt-filter-button" aria-label={t('palette.label')} {...triggerProps}>
+                <PaletteIcon />
+              </button>
+            )}
+          >
+            <PopoverHeading title={t('palette.label')} />
+            <PopoverList>
+              {ELEMENT_PALETTES.map((palette) => (
+                <PopoverItem key={palette.id}>
+                  <input
+                    type="radio"
+                    name="chem-palette"
+                    value={palette.id}
+                    checked={palette.id === paletteId}
+                    onChange={() => setPaletteId(palette.id)}
+                  />
+                  <span>{t(palette.labelKey)}</span>
+                </PopoverItem>
+              ))}
+            </PopoverList>
+          </Popover>
+        )}
         <LanguageButton className="pt-lang-button" label={t('Switch language')} />
       </div>
-      <div className="pt-table-wrap">
-        <table className="pt-table">
-          <thead>
-            <tr>
-              {columns.map((column) => (
-                <th
-                  key={column.key}
-                  onClick={() =>
-                    setSort((prev) =>
-                      prev && prev.key === column.key
-                        ? { key: column.key, dir: prev.dir === 'asc' ? 'desc' : 'asc' }
-                        : { key: column.key, dir: 'asc' },
-                    )
-                  }
-                  className={sort?.key === column.key ? `pt-sort-${sort.dir}` : ''}
-                >
-                  {t(`fields.${column.label}`)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {sorted.map((row) => (
-              <tr key={row.number}>
-                {columns.map((column) => (
-                  <td key={column.key} className={column.numeric ? 'pt-numeric' : ''}>
-                    {cellText(column, row[column.key] ?? '')}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {view === 'table' ? (
+        <TableView columns={columns} rows={sorted} sort={sort} onSort={handleSort} />
+      ) : (
+        <PeriodicView rows={rows} matchedNumbers={matchedNumbers} searchActive={searchActive} paletteId={paletteId} />
+      )}
     </div>
   )
 }

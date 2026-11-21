@@ -7,6 +7,7 @@ dist/
 output/
 data/
 tmp/
+tsconfig.tsbuildinfo
 
 # Logs
 *.log

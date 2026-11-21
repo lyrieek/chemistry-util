@@ -1,5 +1,7 @@
 {
   "translation": {
+    "title": "化学工具",
+    "description": "常见材料化学组成的交互式图表。",
     "Search": "搜索",
     "Search materials": "搜索材料",
     "Clear search": "清除搜索",
@@ -15,6 +17,8 @@
     "Atomic ratio": "原子比",
     "Switch theme": "切换主题",
     "Switch language": "切换语言",
+    "atom_one": "个原子",
+    "atom_other": "个原子",
     "name": {
       "Water": "水",
       "Table Salt": "食盐",
@@ -27,7 +31,7 @@
       "Ethanol": "乙醇",
       "Glucose": "葡萄糖",
       "Caffeine": "咖啡因",
-      "Steel": "低碳钢",
+      "Steel": "碳钢",
       "Bronze": "青铜",
       "Stainless Steel": "不锈钢",
       "Lithium Phosphate": "磷酸锂",
@@ -51,7 +55,7 @@
       "Steel": "铁碳合金",
       "Bronze": "铜锡合金",
       "Stainless Steel": "含铬的耐腐蚀钢",
-      "Lithium Phosphate": "锂电池正极材料之一",
+      "Lithium Phosphate": "磷酸锂，锂电池中用作电解质材料",
       "Aluminum Oxide": "氧化铝，刚玉的主要成分",
       "Silicon Carbide": "碳化硅，金刚砂",
       "Cantor Alloy": "五元等原子比高熵合金",
