@@ -6,6 +6,20 @@
     "Switch language": "切换语言",
     "Columns": "显示列",
     "Reset": "重置",
+    "Temperature": "温度",
+    "Temperature value": "{{value}} K",
+    "Room temperature": "常温",
+    "Close": "关闭",
+    "Select an element": "选择元素",
+    "Click an element to see details": "点击元素查看详情",
+    "Atomic radius": "原子半径",
+    "Covalent radius": "共价半径",
+    "largest atomic radius": "这是原子半径最大的元素",
+    "largest covalent radius": "这是共价半径最大的元素",
+    "smallest atomic radius": "这是原子半径最小的元素",
+    "smallest covalent radius": "这是共价半径最小的元素",
+    "no bulk crystal": "无宏观样品，暂无实测数据",
+    "no radius data": "暂无数据",
     "View": "显示方式",
     "Data table": "数据表",
     "Periodic table": "周期表",
@@ -166,10 +180,10 @@
       },
       "block": {
         "label": "分区",
-        "s": "s 区",
-        "p": "p 区",
-        "d": "d 区",
-        "f": "f 区"
+        "s": "s 区（ns 轨道）",
+        "p": "p 区（np 轨道）",
+        "d": "d 区（(n-1)d 轨道）",
+        "f": "f 区（(n-2)f 轨道）"
       }
     },
     "category": {

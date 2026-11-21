@@ -1,0 +1,251 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1080" role="img" aria-labelledby="title desc">
+  <title id="title">s/p/d/f 四个亚层轨道的空间结构</title>
+  <desc id="desc">用 2D 投影示意 s 轨道球形、p 轨道哑铃形、d 轨道四瓣形与 dz² 环状结构、f 轨道多瓣复杂形状。</desc>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --fg: #0F172A;
+      --muted: #64748B;
+      --line: #CBD5E1;
+      --card: #FFFFFF;
+      --card-line: #E2E8F0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0B1220;
+        --fg: #E5E7EB;
+        --muted: #94A3B8;
+        --line: #334155;
+        --card: #111827;
+        --card-line: #1F2937;
+      }
+    }
+    svg { font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; }
+    .bg { fill: var(--bg); }
+    .title { fill: var(--fg); font-size: 26px; font-weight: 700; }
+    .sub { fill: var(--muted); font-size: 13px; }
+    .section-title { font-size: 22px; font-weight: 700; }
+    .section-desc { fill: var(--muted); font-size: 12.5px; }
+    .orb-name { fill: var(--fg); font-size: 14px; font-weight: 700; }
+    .orb-note { fill: var(--muted); font-size: 11.5px; }
+    .orb-note-strong { fill: var(--fg); font-size: 12px; }
+
+    /* 渐变 stop 颜色 */
+    .s1 { stop-color: #FEF3C7; }
+    .s2 { stop-color: #FBBF24; }
+    .s3 { stop-color: #D97706; }
+    .p1 { stop-color: #DCFCE7; }
+    .p2 { stop-color: #4ADE80; }
+    .p3 { stop-color: #16A34A; }
+    .d1 { stop-color: #DBEAFE; }
+    .d2 { stop-color: #60A5FA; }
+    .d3 { stop-color: #2563EB; }
+    .f1 { stop-color: #F3E8FF; }
+    .f2 { stop-color: #C084FC; }
+    .f3 { stop-color: #9333EA; }
+
+    @media (prefers-color-scheme: dark) {
+      .s1 { stop-color: #78350F; }
+      .s2 { stop-color: #FBBF24; }
+      .s3 { stop-color: #B45309; }
+      .p1 { stop-color: #14532D; }
+      .p2 { stop-color: #4ADE80; }
+      .p3 { stop-color: #15803D; }
+      .d1 { stop-color: #1E3A8A; }
+      .d2 { stop-color: #60A5FA; }
+      .d3 { stop-color: #1D4ED8; }
+      .f1 { stop-color: #581C87; }
+      .f2 { stop-color: #C084FC; }
+      .f3 { stop-color: #7E22CE; }
+    }
+  </style>
+
+  <defs>
+    <radialGradient id="gradS" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" class="s1" />
+      <stop offset="55%" class="s2" />
+      <stop offset="100%" class="s3" />
+    </radialGradient>
+    <radialGradient id="gradP" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" class="p1" />
+      <stop offset="55%" class="p2" />
+      <stop offset="100%" class="p3" />
+    </radialGradient>
+    <radialGradient id="gradD" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" class="d1" />
+      <stop offset="55%" class="d2" />
+      <stop offset="100%" class="d3" />
+    </radialGradient>
+    <radialGradient id="gradF" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" class="f1" />
+      <stop offset="55%" class="f2" />
+      <stop offset="100%" class="f3" />
+    </radialGradient>
+  </defs>
+
+  <rect class="bg" width="1200" height="1080" />
+
+  <text class="title" x="40" y="44">s / p / d / f 亚层轨道空间结构示意</text>
+  <text class="sub" x="40" y="70">2D 投影仅作形态与方向示意；真实原子轨道是电子概率密度云（等值面）。颜色：s 橙、p 绿、d 蓝、f 紫。</text>
+
+  
+  <g>
+    <text class="section-title" x="40" y="125" fill="#F59E0B">s 轨道</text>
+    <text class="section-desc" x="40" y="148">1 个轨道 · 球形</text>
+    <text class="section-desc" x="40" y="168">角量子数 l = 0，无方向性</text>
+    <text class="section-desc" x="40" y="188">概率密度绕原子核各向同性</text>
+
+    <circle cx="520" cy="175" r="62" fill="url(#gradS)" stroke="#D97706" stroke-width="2" />
+    <ellipse cx="498" cy="152" rx="18" ry="12" fill="#FFFFFF" opacity="0.25" />
+    <text class="orb-name" x="520" y="260" text-anchor="middle">s（球形）</text>
+  </g>
+
+  
+  <g>
+    <line x1="40" y1="285" x2="1160" y2="285" stroke="var(--card-line)" stroke-width="1" />
+    <text class="section-title" x="40" y="320" fill="#22C55E">p 轨道</text>
+    <text class="section-desc" x="40" y="343">3 个轨道 · 哑铃形</text>
+    <text class="section-desc" x="40" y="363">l = 1，沿 x / y / z 三个正交方向</text>
+    <text class="section-desc" x="40" y="383">每组两瓣，核处存在节面</text>
+
+    
+    <g transform="translate(380, 390)">
+      <ellipse cx="-42" cy="0" rx="38" ry="22" fill="url(#gradP)" stroke="#16A34A" stroke-width="1.5" />
+      <ellipse cx="42" cy="0" rx="38" ry="22" fill="url(#gradP)" stroke="#16A34A" stroke-width="1.5" />
+      <text class="orb-name" x="0" y="72" text-anchor="middle">px</text>
+      <text class="orb-note" x="0" y="88" text-anchor="middle">沿 x 轴</text>
+    </g>
+
+    
+    <g transform="translate(640, 390)">
+      <ellipse cx="0" cy="-42" rx="22" ry="38" fill="url(#gradP)" stroke="#16A34A" stroke-width="1.5" />
+      <ellipse cx="0" cy="42" rx="22" ry="38" fill="url(#gradP)" stroke="#16A34A" stroke-width="1.5" />
+      <text class="orb-name" x="0" y="72" text-anchor="middle">py</text>
+      <text class="orb-note" x="0" y="88" text-anchor="middle">沿 y 轴</text>
+    </g>
+
+    
+    <g transform="translate(900, 390)">
+      <ellipse cx="0" cy="-36" rx="20" ry="32" fill="url(#gradP)" stroke="#16A34A" stroke-width="1.5" opacity="0.85" />
+      <ellipse cx="0" cy="36" rx="24" ry="36" fill="url(#gradP)" stroke="#16A34A" stroke-width="1.5" />
+      <text class="orb-name" x="0" y="72" text-anchor="middle">pz</text>
+      <text class="orb-note" x="0" y="88" text-anchor="middle">沿 z 轴（2D 投影）</text>
+    </g>
+  </g>
+
+  
+  <g>
+    <line x1="40" y1="510" x2="1160" y2="510" stroke="var(--card-line)" stroke-width="1" />
+    <text class="section-title" x="40" y="545" fill="#3B82F6">d 轨道</text>
+    <text class="section-desc" x="40" y="568">5 个轨道</text>
+    <text class="section-desc" x="40" y="588">l = 2</text>
+    <text class="section-desc" x="40" y="608">4 个四瓣形（平面间/坐标轴向）</text>
+    <text class="section-desc" x="40" y="628">1 个 dz²：两极瓣 + 赤道环带</text>
+
+    
+    <g transform="translate(280, 635)">
+      <ellipse cx="-30" cy="-30" rx="28" ry="13" transform="rotate(45 -30 -30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="30" cy="-30" rx="28" ry="13" transform="rotate(-45 30 -30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="-30" cy="30" rx="28" ry="13" transform="rotate(-45 -30 30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="30" cy="30" rx="28" ry="13" transform="rotate(45 30 30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <text class="orb-name" x="0" y="72" text-anchor="middle">dxy</text>
+      <text class="orb-note" x="0" y="88" text-anchor="middle">xy 平面（轴间）</text>
+    </g>
+
+    
+    <g transform="translate(460, 635)">
+      <ellipse cx="-30" cy="-30" rx="28" ry="13" transform="rotate(45 -30 -30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="30" cy="-30" rx="28" ry="13" transform="rotate(-45 30 -30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="-30" cy="30" rx="28" ry="13" transform="rotate(-45 -30 30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="30" cy="30" rx="28" ry="13" transform="rotate(45 30 30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <text class="orb-name" x="0" y="72" text-anchor="middle">dxz</text>
+      <text class="orb-note" x="0" y="88" text-anchor="middle">xz 平面（投影同形）</text>
+    </g>
+
+    
+    <g transform="translate(640, 635)">
+      <ellipse cx="-30" cy="-30" rx="28" ry="13" transform="rotate(45 -30 -30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="30" cy="-30" rx="28" ry="13" transform="rotate(-45 30 -30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="-30" cy="30" rx="28" ry="13" transform="rotate(-45 -30 30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="30" cy="30" rx="28" ry="13" transform="rotate(45 30 30)" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <text class="orb-name" x="0" y="72" text-anchor="middle">dyz</text>
+      <text class="orb-note" x="0" y="88" text-anchor="middle">yz 平面（投影同形）</text>
+    </g>
+
+    
+    <g transform="translate(820, 635)">
+      <ellipse cx="0" cy="-38" rx="13" ry="28" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="0" cy="38" rx="13" ry="28" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="-38" cy="0" rx="28" ry="13" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="38" cy="0" rx="28" ry="13" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <text class="orb-name" x="0" y="72" text-anchor="middle">dx²−y²</text>
+      <text class="orb-note" x="0" y="88" text-anchor="middle">沿 x / y 轴向</text>
+    </g>
+
+    
+    <g transform="translate(1000, 635)">
+      <ellipse cx="0" cy="-42" rx="20" ry="30" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="0" cy="42" rx="20" ry="30" fill="url(#gradD)" stroke="#2563EB" stroke-width="1.2" />
+      <ellipse cx="0" cy="0" rx="38" ry="14" fill="none" stroke="#2563EB" stroke-width="6" opacity="0.75" />
+      <text class="orb-name" x="0" y="72" text-anchor="middle">dz²</text>
+      <text class="orb-note" x="0" y="88" text-anchor="middle">两瓣 + 环带</text>
+    </g>
+  </g>
+
+  
+  <g>
+    <line x1="40" y1="770" x2="1160" y2="770" stroke="var(--card-line)" stroke-width="1" />
+    <text class="section-title" x="40" y="805" fill="#A855F7">f 轨道</text>
+    <text class="section-desc" x="40" y="828">7 个轨道</text>
+    <text class="section-desc" x="40" y="848">l = 3</text>
+    <text class="section-desc" x="40" y="868">多瓣空间分布更复杂</text>
+    <text class="section-desc" x="40" y="888">部分轨道带环状高密度区</text>
+    <text class="section-desc" x="40" y="908">此处仅示意 3 个代表</text>
+
+    
+    <g transform="translate(380, 895)">
+      <ellipse cx="0" cy="-42" rx="12" ry="26" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="0" cy="42" rx="12" ry="26" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="-42" cy="0" rx="26" ry="12" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="42" cy="0" rx="26" ry="12" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="-28" cy="-28" rx="22" ry="10" transform="rotate(45 -28 -28)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="28" cy="-28" rx="22" ry="10" transform="rotate(-45 28 -28)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="-28" cy="28" rx="22" ry="10" transform="rotate(-45 -28 28)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="28" cy="28" rx="22" ry="10" transform="rotate(45 28 28)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <text class="orb-name" x="0" y="82" text-anchor="middle">fxyz</text>
+      <text class="orb-note" x="0" y="98" text-anchor="middle">8 瓣示意</text>
+    </g>
+
+    
+    <g transform="translate(650, 895)">
+      <ellipse cx="0" cy="-44" rx="18" ry="28" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="0" cy="44" rx="18" ry="28" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="-32" cy="-32" rx="22" ry="11" transform="rotate(45 -32 -32)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="32" cy="-32" rx="22" ry="11" transform="rotate(-45 32 -32)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="-32" cy="32" rx="22" ry="11" transform="rotate(-45 -32 32)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="32" cy="32" rx="22" ry="11" transform="rotate(45 32 32)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="0" cy="0" rx="40" ry="15" fill="none" stroke="#7E22CE" stroke-width="5" opacity="0.75" />
+      <text class="orb-name" x="0" y="82" text-anchor="middle">fz³</text>
+      <text class="orb-note" x="0" y="98" text-anchor="middle">多瓣 + 环带示意</text>
+    </g>
+
+    
+    <g transform="translate(920, 895)">
+      <ellipse cx="0" cy="-44" rx="16" ry="28" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="0" cy="44" rx="16" ry="28" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="-36" cy="0" rx="26" ry="12" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="36" cy="0" rx="26" ry="12" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="-30" cy="-30" rx="22" ry="10" transform="rotate(45 -30 -30)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <ellipse cx="30" cy="30" rx="22" ry="10" transform="rotate(45 30 30)" fill="url(#gradF)" stroke="#7E22CE" stroke-width="1.2" />
+      <text class="orb-name" x="0" y="82" text-anchor="middle">fxz²</text>
+      <text class="orb-note" x="0" y="98" text-anchor="middle">6 瓣示意</text>
+    </g>
+  </g>
+
+  
+  <g transform="translate(40, 1025)">
+    <rect x="0" y="0" width="1120" height="42" rx="10" fill="var(--card)" stroke="var(--card-line)" />
+    <text x="16" y="17" class="orb-note-strong">注：真实轨道是电子概率密度云；dz² 等轨道腰部“环状”部分是电子云环带（高概率区），节点（概率密度为 0）位于其与瓣之间的节面。</text>
+    <text x="16" y="35" class="orb-note">dxy / dxz / dyz 在 2D 投影中形状相似，但分别位于 xy / xz / yz 平面；f 轨道共 7 个，此处仅列 3 个代表作 2D 简化示意。</text>
+  </g>
+</svg>

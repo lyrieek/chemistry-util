@@ -1,0 +1,264 @@
+/* 轨道结构示意：文字用 DOM，仅轨道形状为内联 SVG。前缀 pt-orb- */
+
+.pt-orb-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.pt-orb-chart {
+  display: flex;
+  flex-direction: column;
+  color: var(--pt-ink, #0f172a);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.pt-orb-chart__title {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.pt-orb-chart__sub {
+  margin: 0 0 6px;
+  color: var(--pt-ink-soft, #5d737a);
+  font-size: 13.5px;
+}
+
+.pt-orb-chart__section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 26px;
+  padding: 20px 0;
+  border-top: 1px solid var(--pt-line, #dbe6e9);
+}
+
+.pt-orb-chart__info {
+  flex: 1 1 190px;
+  min-width: 170px;
+}
+
+.pt-orb-chart__heading {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.pt-orb-chart__heading[data-tone='s'] {
+  color: #b45309;
+}
+.pt-orb-chart__heading[data-tone='p'] {
+  color: #15803d;
+}
+.pt-orb-chart__heading[data-tone='d'] {
+  color: #1d4ed8;
+}
+.pt-orb-chart__heading[data-tone='f'] {
+  color: #7e22ce;
+}
+
+.pt-orb-chart__list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  color: var(--pt-ink-soft, #5d737a);
+  font-size: 13px;
+  list-style: none;
+}
+
+.pt-orb-chart__list li {
+  position: relative;
+  padding-left: 14px;
+}
+
+.pt-orb-chart__list li::before {
+  content: '';
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.pt-orb-chart__section-note {
+  flex: 1 0 100%;
+  margin: 2px 0 0;
+  padding: 10px 12px;
+  color: var(--pt-ink-soft, #5d737a);
+  background: var(--pt-bg, #f8fafc);
+  border-left: 3px solid var(--pt-accent, #3fd0d4);
+  border-radius: 6px;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.pt-orb-chart__shapes {
+  display: flex;
+  flex: 1 1 360px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px 24px;
+}
+
+.pt-orb-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.pt-orb-figure__art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+}
+
+.pt-orb-figure__art svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.pt-orb-figure__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  text-align: center;
+}
+
+.pt-orb-figure__name {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pt-orb-figure__note {
+  color: var(--pt-ink-soft, #5d737a);
+  font-size: 12px;
+}
+
+.pt-orb-chart__note {
+  margin-top: 6px;
+  padding: 12px 14px;
+  background: var(--pt-bg, #f8fafc);
+  border: 1px solid var(--pt-line, #dbe6e9);
+  border-radius: 10px;
+  color: var(--pt-ink-soft, #5d737a);
+  font-size: 12.5px;
+}
+
+.pt-orb-chart__note p {
+  margin: 0;
+}
+
+.pt-orb-chart__note p + p {
+  margin-top: 6px;
+}
+
+.pt-orb-chart__note + .pt-orb-chart__note {
+  margin-top: 10px;
+}
+
+.pt-orb-chart__note--iupac {
+  border-color: var(--pt-accent-line, rgba(63, 208, 212, 0.42));
+  box-shadow: inset 3px 0 0 var(--pt-accent, #3fd0d4);
+}
+
+/* 渐变 stop 颜色（明暗主题各一套） */
+.pt-orb-chart .pt-orb-s1 {
+  stop-color: #fef3c7;
+}
+.pt-orb-chart .pt-orb-s2 {
+  stop-color: #fbbf24;
+}
+.pt-orb-chart .pt-orb-s3 {
+  stop-color: #d97706;
+}
+.pt-orb-chart .pt-orb-p1 {
+  stop-color: #dcfce7;
+}
+.pt-orb-chart .pt-orb-p2 {
+  stop-color: #4ade80;
+}
+.pt-orb-chart .pt-orb-p3 {
+  stop-color: #16a34a;
+}
+.pt-orb-chart .pt-orb-d1 {
+  stop-color: #dbeafe;
+}
+.pt-orb-chart .pt-orb-d2 {
+  stop-color: #60a5fa;
+}
+.pt-orb-chart .pt-orb-d3 {
+  stop-color: #2563eb;
+}
+.pt-orb-chart .pt-orb-f1 {
+  stop-color: #f3e8ff;
+}
+.pt-orb-chart .pt-orb-f2 {
+  stop-color: #c084fc;
+}
+.pt-orb-chart .pt-orb-f3 {
+  stop-color: #9333ea;
+}
+
+[data-theme='dark'] .pt-orb-chart__heading[data-tone='s'] {
+  color: #fbbf24;
+}
+[data-theme='dark'] .pt-orb-chart__heading[data-tone='p'] {
+  color: #4ade80;
+}
+[data-theme='dark'] .pt-orb-chart__heading[data-tone='d'] {
+  color: #60a5fa;
+}
+[data-theme='dark'] .pt-orb-chart__heading[data-tone='f'] {
+  color: #c084fc;
+}
+
+[data-theme='dark'] .pt-orb-chart .pt-orb-s1 {
+  stop-color: #78350f;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-s2 {
+  stop-color: #fbbf24;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-s3 {
+  stop-color: #b45309;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-p1 {
+  stop-color: #14532d;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-p2 {
+  stop-color: #4ade80;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-p3 {
+  stop-color: #15803d;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-d1 {
+  stop-color: #1e3a8a;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-d2 {
+  stop-color: #60a5fa;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-d3 {
+  stop-color: #1d4ed8;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-f1 {
+  stop-color: #581c87;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-f2 {
+  stop-color: #c084fc;
+}
+[data-theme='dark'] .pt-orb-chart .pt-orb-f3 {
+  stop-color: #7e22ce;
+}

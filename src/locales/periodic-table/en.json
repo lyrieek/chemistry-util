@@ -6,6 +6,20 @@
     "Switch language": "Switch language",
     "Columns": "Columns",
     "Reset": "Reset",
+    "Temperature": "Temperature",
+    "Temperature value": "{{value}} K",
+    "Room temperature": "Room temperature",
+    "Close": "Close",
+    "Select an element": "Select an element",
+    "Click an element to see details": "Click an element to see details",
+    "Atomic radius": "Atomic radius",
+    "Covalent radius": "Covalent radius",
+    "largest atomic radius": "Largest atomic radius",
+    "largest covalent radius": "Largest covalent radius",
+    "smallest atomic radius": "Smallest atomic radius",
+    "smallest covalent radius": "Smallest covalent radius",
+    "no bulk crystal": "No bulk sample data",
+    "no radius data": "No data",
     "View": "View",
     "Data table": "Data table",
     "Periodic table": "Periodic table",
@@ -166,10 +180,10 @@
       },
       "block": {
         "label": "Block",
-        "s": "s-block",
-        "p": "p-block",
-        "d": "d-block",
-        "f": "f-block"
+        "s": "s-block (ns)",
+        "p": "p-block (np)",
+        "d": "d-block ((n-1)d)",
+        "f": "f-block ((n-2)f)"
       }
     },
     "category": {

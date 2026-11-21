@@ -24,7 +24,7 @@
     "no-plusplus": "off",
     "no-continue": "off",
     "no-console": "warn",
-    "no-undefined": "warn",
+    "no-undefined": "off",
     "no-zero-fractions": "off",
     "no-optional-chaining": "off",
     "no-shadow": "warn",

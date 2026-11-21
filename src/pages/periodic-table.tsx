@@ -1,16 +1,26 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { createRoot } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
 import csvText from '../../data/PeriodicTable.csv?raw'
 import { LanguageButton } from '../components/language-button'
 import { Popover, PopoverAction, PopoverHeading, PopoverItem, PopoverList } from '../components/popover'
 import { Slider } from '../components/slider'
-import { PERIODIC_TABLE_NS } from '../i18n-ns'
+import { ORBITAL_SHAPES_NS, PERIODIC_TABLE_NS } from '../i18n-ns'
 import { parseCsv } from '../utils/csv-utils'
-import { DEFAULT_PALETTE_ID, ELEMENT_PALETTES, type PaletteId } from '../utils/element-palette'
+import {
+  DEFAULT_PALETTE_ID,
+  ELEMENT_PALETTES,
+  getElementPalette,
+  MAX_TEMPERATURE_K,
+  MIN_TEMPERATURE_K,
+  ROOM_TEMPERATURE_K,
+  TEMPERATURE_STEP_K,
+  type PaletteId,
+} from '../utils/element-palette'
 import { elementMatches } from '../utils/element-search'
 import { sortNumber } from '../utils/number-format'
 import { isPeriodicElement } from '../utils/periodic-layout'
+import { OrbitalShapes } from './orbital-shapes'
 import { PeriodicView } from './periodic-view'
 import { COLUMNS, DEFAULT_HIDDEN, TableView, type SortState } from './table-view'
 
@@ -70,6 +80,98 @@ const VIEW_OPTIONS = [
   { value: 'periodic', icon: PeriodicIcon, label: 'Periodic table' },
 ] as const
 
+function OrbitalHelpPopover() {
+  const { t } = useTranslation(ORBITAL_SHAPES_NS)
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onPointerDown = (event: PointerEvent) => {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) setOpen(false)
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
+  return (
+    <span className="pt-orb-help" ref={rootRef}>
+      <button
+        type="button"
+        className="pt-orb-help-trigger"
+        aria-label={t('helpLabel')}
+        aria-expanded={open}
+        aria-controls="pt-orb-help-panel"
+        onClick={() => setOpen((value) => !value)}
+      >
+        ?
+      </button>
+      {open ? (
+        <span className="pt-orb-help-panel" id="pt-orb-help-panel" role="dialog" aria-label={t('helpLabel')}>
+          <OrbitalShapes />
+        </span>
+      ) : null}
+    </span>
+  )
+}
+
+interface PhaseTemperatureBarProps {
+  paletteId: PaletteId
+  temperature: number
+  onChange: (temperature: number) => void
+}
+
+function PhaseTemperatureBar({ paletteId, temperature, onChange }: PhaseTemperatureBarProps) {
+  const { t } = useTranslation(PERIODIC_TABLE_NS)
+  const progress = ((temperature - MIN_TEMPERATURE_K) / (MAX_TEMPERATURE_K - MIN_TEMPERATURE_K)) * 100
+  const value = t('Temperature value', { value: temperature })
+  const palette = getElementPalette(paletteId)
+
+  return (
+    <div className="pt-phase-bar">
+      <label className="pt-phase-bar-label" htmlFor="pt-temperature">
+        {t('Temperature')}
+      </label>
+      <input
+        id="pt-temperature"
+        className="pt-temperature-range"
+        type="range"
+        min={MIN_TEMPERATURE_K}
+        max={MAX_TEMPERATURE_K}
+        step={TEMPERATURE_STEP_K}
+        value={temperature}
+        aria-valuetext={value}
+        style={{ '--pt-temperature-progress': `${progress}%` } as CSSProperties}
+        onChange={(event) => onChange(Number(event.currentTarget.value))}
+      />
+      <output className="pt-temperature-value" htmlFor="pt-temperature">
+        {value}
+      </output>
+      {temperature !== ROOM_TEMPERATURE_K && (
+        <button type="button" className="pt-temperature-reset" onClick={() => onChange(ROOM_TEMPERATURE_K)}>
+          {t('Room temperature')}
+        </button>
+      )}
+      <div className="pt-phase-bar-legend">
+        {palette.legend.map((item) => (
+          <span key={item.tone} className="pt-phase-swatch">
+            <span className="pt-phase-swatch-color" data-tone={item.tone} aria-hidden="true" />
+            <span>{t(item.labelKey)}</span>
+          </span>
+        ))}
+        {palette.id === 'block' && <OrbitalHelpPopover />}
+      </div>
+    </div>
+  )
+}
+
 function Page() {
   const { t, i18n } = useTranslation(PERIODIC_TABLE_NS)
   const rows = useMemo(() => parseCsv(csvText), [])
@@ -80,6 +182,7 @@ function Page() {
   const [columnsOpen, setColumnsOpen] = useState(false)
   const [view, setView] = useState<View>(storedView)
   const [paletteId, setPaletteId] = useState<PaletteId>(DEFAULT_PALETTE_ID)
+  const [temperature, setTemperature] = useState(ROOM_TEMPERATURE_K)
   const [paletteOpen, setPaletteOpen] = useState(false)
   const viewRows = view === 'periodic' ? periodicRows : rows
 
@@ -226,10 +329,21 @@ function Page() {
         )}
         <LanguageButton className="pt-lang-button" label={t('Switch language')} />
       </div>
+      {view === 'periodic' && (
+        <PhaseTemperatureBar
+          paletteId={paletteId}
+          temperature={temperature}
+          onChange={(next) => {
+            setTemperature(next)
+            // 温度只对相态色盘有意义，拖动时自动切过去，避免出现「拖了没反应」。
+            setPaletteId('phase')
+          }}
+        />
+      )}
       {view === 'table' ? (
         <TableView columns={columns} rows={sorted} sort={sort} onSort={handleSort} />
       ) : (
-        <PeriodicView rows={rows} matchedNumbers={matchedNumbers} searchActive={searchActive} paletteId={paletteId} />
+        <PeriodicView rows={rows} matchedNumbers={matchedNumbers} searchActive={searchActive} paletteId={paletteId} temperature={temperature} />
       )}
     </div>
   )

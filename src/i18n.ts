@@ -5,11 +5,13 @@ import zhMaterialCards from './locales/material-cards/zh.json'
 import enMaterialCards from './locales/material-cards/en.json'
 import zhPeriodicTable from './locales/periodic-table/zh.json'
 import enPeriodicTable from './locales/periodic-table/en.json'
-import { MATERIAL_CARDS_NS, PERIODIC_TABLE_NS } from './i18n-ns'
+import zhOrbitalShapes from './locales/orbital-shapes/zh.json'
+import enOrbitalShapes from './locales/orbital-shapes/en.json'
+import { MATERIAL_CARDS_NS, ORBITAL_SHAPES_NS, PERIODIC_TABLE_NS } from './i18n-ns'
 
 export type Lang = 'zh' | 'en'
 
-export { MATERIAL_CARDS_NS, PERIODIC_TABLE_NS } from './i18n-ns'
+export { MATERIAL_CARDS_NS, ORBITAL_SHAPES_NS, PERIODIC_TABLE_NS } from './i18n-ns'
 
 const LANG_STORAGE_KEY = 'lang'
 const DEFAULT_LANG: Lang = 'zh'
@@ -39,10 +41,12 @@ i18n.use(initReactI18next).init({
     zh: {
       [MATERIAL_CARDS_NS]: zhMaterialCards.translation,
       [PERIODIC_TABLE_NS]: zhPeriodicTable.translation,
+      [ORBITAL_SHAPES_NS]: zhOrbitalShapes.translation,
     },
     en: {
       [MATERIAL_CARDS_NS]: enMaterialCards.translation,
       [PERIODIC_TABLE_NS]: enPeriodicTable.translation,
+      [ORBITAL_SHAPES_NS]: enOrbitalShapes.translation,
     },
   },
   defaultNS: MATERIAL_CARDS_NS,

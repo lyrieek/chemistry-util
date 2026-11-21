@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PERIODIC_TABLE_NS } from '../i18n-ns'
-import valueKeys from '../locales/periodic-table/value-keys.json'
 import type { CsvRow } from '../utils/csv-utils'
+import { categoryKeyOf } from '../utils/element-labels'
 import { DEFAULT_PALETTE_ID, getElementPalette, type PaletteId } from '../utils/element-palette'
+import { radiusExtentsOf } from '../utils/element-radii'
 import { formatNumber } from '../utils/number-format'
 import { isPeriodicElement, layoutOf, type Series } from '../utils/periodic-layout'
+import { PeriodicTableCard } from './periodic-table-card'
 
-const CATEGORY_KEYS: Record<string, string> = valueKeys.category
 const GROUPS = Array.from({ length: 18 }, (_, index) => index + 1)
 const PERIODS = Array.from({ length: 7 }, (_, index) => index + 1)
 
@@ -16,6 +17,8 @@ interface PeriodicViewProps {
   matchedNumbers: ReadonlySet<string>
   searchActive: boolean
   paletteId?: PaletteId
+  /** 相态色盘按该温度（K）上色；不传则使用数据中的常温相态。 */
+  temperature?: number
 }
 
 function cellClassName(match: boolean, dimmed: boolean, selected: boolean, seriesHighlighted: boolean): string {
@@ -30,12 +33,18 @@ function cellClassName(match: boolean, dimmed: boolean, selected: boolean, serie
     .join(' ')
 }
 
-export function PeriodicView({ rows, matchedNumbers, searchActive, paletteId = DEFAULT_PALETTE_ID }: PeriodicViewProps) {
+export function PeriodicView({ rows, matchedNumbers, searchActive, paletteId = DEFAULT_PALETTE_ID, temperature }: PeriodicViewProps) {
   const { t } = useTranslation(PERIODIC_TABLE_NS)
   const [selected, setSelected] = useState<string | null>(null)
   const [highlightedSeries, setHighlightedSeries] = useState<Series | null>(null)
   const palette = getElementPalette(paletteId)
   const visibleRows = useMemo(() => rows.filter((row) => isPeriodicElement(row)), [rows])
+  const radiiExtents = useMemo(() => radiusExtentsOf(rows), [rows])
+  const selectedRow = useMemo(
+    () => (selected === null ? null : (visibleRows.find((row) => row.number === selected) ?? null)),
+    [selected, visibleRows],
+  )
+  const phasePalette = palette.id === 'phase'
 
   const toggleSeries = (series: Series) => {
     setHighlightedSeries((previous) => (previous === series ? null : series))
@@ -107,11 +116,13 @@ export function PeriodicView({ rows, matchedNumbers, searchActive, paletteId = D
           const isSelected = selected === row.number
           const isSeriesHighlighted = highlightedSeries !== null && position.series === highlightedSeries
           const name = t(`element.${row.symbol}`, { defaultValue: row.name })
-          const categoryKey = CATEGORY_KEYS[row.category]
+          const categoryKey = categoryKeyOf(row)
           const category = categoryKey ? t(`category.${categoryKey}`, { defaultValue: row.category }) : row.category
-          const ariaLabel = category
-            ? `${name} ${row.symbol}, ${t('fields.Number')} ${row.number}, ${category}`
-            : `${name} ${row.symbol}, ${t('fields.Number')} ${row.number}`
+          const tone = palette.toneOf(row, temperature)
+          const phaseLabel = phasePalette && (tone === 'solid' || tone === 'liquid' || tone === 'gas') ? t(`palette.phase.${tone}`) : ''
+          const ariaLabel = [`${name} ${row.symbol}`, `${t('fields.Number')} ${row.number}`, category, phaseLabel]
+            .filter((part) => part !== '')
+            .join(', ')
 
           return (
             <button
@@ -121,7 +132,7 @@ export function PeriodicView({ rows, matchedNumbers, searchActive, paletteId = D
               style={{ gridColumn: position.column + 1, gridRow: position.row + 1 }}
               aria-label={ariaLabel}
               aria-pressed={isSelected}
-              data-tone={palette.toneOf(row)}
+              data-tone={tone}
               data-number={row.number}
               data-symbol={row.symbol}
               {...(position.series ? { 'data-series': position.series } : {})}
@@ -134,6 +145,8 @@ export function PeriodicView({ rows, matchedNumbers, searchActive, paletteId = D
             </button>
           )
         })}
+
+        <PeriodicTableCard row={selectedRow} temperature={temperature} radiusExtents={radiiExtents} onClose={() => setSelected(null)} />
       </div>
     </div>
   )

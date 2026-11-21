@@ -1,0 +1,66 @@
+{
+  "translation": {
+    "title": "s / p / d / f subshell orbital shapes",
+    "subtitle": "2D projections only indicate shape and orientation; real atomic orbitals are electron probability-density clouds (isosurfaces). Colours: s orange, p green, d blue, f purple.",
+    "helpLabel": "Orbital shapes explained",
+    "sections": {
+      "s": {
+        "title": "s orbitals",
+        "facts": [
+          "1 orbital · spherical",
+          "angular momentum l = 0, no directionality",
+          "probability density is isotropic around the nucleus",
+          "s-block: groups 1–2; He (1s²) is s-block by configuration even though it sits in group 18 (consistent with IUPAC)"
+        ]
+      },
+      "p": {
+        "title": "p orbitals",
+        "facts": [
+          "3 orbitals · dumbbell-shaped",
+          "l = 1, along the three orthogonal x / y / z directions",
+          "each orbital has two lobes with a nodal plane at the nucleus",
+          "p-block: groups 13–18 (excluding He)"
+        ]
+      },
+      "d": {
+        "title": "d orbitals",
+        "facts": [
+          "5 orbitals · l = 2",
+          "4 four-lobed orbitals (between planes / along axes)",
+          "1 dz²: two polar lobes + equatorial ring",
+          "d-block: groups 3–12 (transition metals)"
+        ]
+      },
+      "f": {
+        "title": "f orbitals",
+        "facts": [
+          "7 orbitals · l = 3",
+          "more complex multi-lobed distributions",
+          "some orbitals have ring-shaped high-density regions",
+          "only 3 representatives shown here",
+          "lanthanides 57–71 (incl. La) and actinides 89–103 (incl. Ac) are usually shown as a detached row",
+          "IUPAC has not settled whether group 3 is Sc–Y–La–Ac or Sc–Y–Lu–Lr (its 2021 provisional report found no objective criterion to decide)."
+        ]
+      }
+    },
+    "figures": {
+      "s": { "name": "s (spherical)", "note": "isotropic" },
+      "px": { "name": "px", "note": "along x axis" },
+      "py": { "name": "py", "note": "along y axis" },
+      "pz": { "name": "pz", "note": "along z axis (2D projection)" },
+      "dxy": { "name": "dxy", "note": "xy plane (between axes)" },
+      "dxz": { "name": "dxz", "note": "xz plane (same in projection)" },
+      "dyz": { "name": "dyz", "note": "yz plane (same in projection)" },
+      "dx2y2": { "name": "dx²−y²", "note": "along x / y axes" },
+      "dz2": { "name": "dz²", "note": "two lobes + ring" },
+      "fxyz": { "name": "fxyz", "note": "8 lobes, schematic" },
+      "fz3": { "name": "fz³", "note": "multi-lobe + ring, schematic" },
+      "fxz2": { "name": "fxz²", "note": "6 lobes, schematic" }
+    },
+    "notes": {
+      "cloud": "Real orbitals are electron probability-density clouds; the ring around the waist of orbitals such as dz² is a high-probability electron-cloud band, and the node (zero probability density) lies on the nodal plane between it and the lobes.",
+      "projection": "dxy / dxz / dyz look alike in 2D projection but lie in the xy / xz / yz planes respectively; there are 7 f orbitals and only 3 representatives are shown here as a simplified 2D sketch.",
+      "blockLabel": "Note: the orbital labels for the s / p / d / f blocks (ns, np, (n−1)d, (n−2)f) match IUPAC electron-configuration notation and are the standard convention."
+    }
+  }
+}

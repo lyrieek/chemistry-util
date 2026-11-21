@@ -23,28 +23,34 @@
 }
 
 /* 元素色盘：颜色按 data-palette 作用域声明，后续新增色盘只需再加一段。 */
-.pt-grid[data-palette='phase'] {
+.pt-grid[data-palette='phase'],
+.pt-phase-bar,
+.pt-card {
   --pt-tone-solid: #fbf4d2;
   --pt-tone-liquid: #d9edf8;
   --pt-tone-gas: #ddf5e2;
   --pt-tone-unknown: var(--pt-cell);
 }
 
-[data-theme='dark'] .pt-grid[data-palette='phase'] {
+[data-theme='dark'] .pt-grid[data-palette='phase'],
+[data-theme='dark'] .pt-phase-bar,
+[data-theme='dark'] .pt-card {
   --pt-tone-solid: #3a3518;
   --pt-tone-liquid: #12303a;
   --pt-tone-gas: #153321;
   --pt-tone-unknown: var(--pt-cell);
 }
 
-.pt-grid[data-palette='block'] {
+.pt-grid[data-palette='block'],
+.pt-phase-bar {
   --pt-tone-s: #f9dfc9;
   --pt-tone-p: #d8f3dc;
   --pt-tone-d: #d6e6f8;
   --pt-tone-f: #e8dcfa;
 }
 
-[data-theme='dark'] .pt-grid[data-palette='block'] {
+[data-theme='dark'] .pt-grid[data-palette='block'],
+[data-theme='dark'] .pt-phase-bar {
   --pt-tone-s: #3f2a1a;
   --pt-tone-p: #173522;
   --pt-tone-d: #152b40;
@@ -254,6 +260,233 @@ h1 {
   background: rgba(63, 208, 212, 0.08);
 }
 
+/* ---------- 温度滑块（相态色盘） ---------- */
+.pt-phase-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: -2px 0 14px;
+  padding: 10px 14px;
+  background: var(--pt-surface);
+  border: 1px solid var(--pt-line);
+  border-radius: 10px;
+}
+
+.pt-phase-bar-label {
+  color: var(--pt-ink-soft);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.pt-temperature-range {
+  flex: 1 1 260px;
+  min-width: 160px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.pt-temperature-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--pt-accent) 0 var(--pt-temperature-progress, 0%),
+    var(--pt-line) var(--pt-temperature-progress, 0%) 100%
+  );
+}
+
+.pt-temperature-range::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  background: var(--pt-bg);
+  border: 2px solid var(--pt-accent);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(16, 36, 42, 0.24);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.pt-temperature-range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--pt-line);
+}
+
+.pt-temperature-range::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--pt-accent);
+}
+
+.pt-temperature-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--pt-bg);
+  border: 2px solid var(--pt-accent);
+  border-radius: 50%;
+}
+
+.pt-temperature-range:focus-visible {
+  outline: 2px solid var(--pt-accent);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+.pt-temperature-value {
+  padding: 3px 0px;
+  min-width: 64px;
+  color: var(--pt-ink);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.pt-temperature-reset {
+  padding: 2px 10px;
+  color: var(--pt-ink-soft);
+  background: var(--pt-bg);
+  border: 1px solid var(--pt-line);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.pt-temperature-reset:hover,
+.pt-temperature-reset:focus-visible {
+  color: var(--pt-accent);
+  border-color: var(--pt-accent);
+}
+
+.pt-temperature-reset:focus-visible {
+  outline: 2px solid var(--pt-accent);
+  outline-offset: 2px;
+}
+
+.pt-phase-bar-legend {
+  display: flex;
+  flex: 1 0 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  order: 4;
+  color: var(--pt-ink-soft);
+  font-size: 12px;
+}
+
+.pt-phase-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.pt-phase-swatch-color {
+  width: 12px;
+  height: 12px;
+  background: var(--pt-cell);
+  border: 1px solid var(--pt-line);
+  border-radius: 3px;
+}
+
+.pt-phase-swatch-color[data-tone='solid'] {
+  background: var(--pt-tone-solid, var(--pt-cell));
+}
+
+.pt-phase-swatch-color[data-tone='liquid'] {
+  background: var(--pt-tone-liquid, var(--pt-cell));
+}
+
+.pt-phase-swatch-color[data-tone='gas'] {
+  background: var(--pt-tone-gas, var(--pt-cell));
+}
+
+.pt-phase-swatch-color[data-tone='s'] {
+  background: var(--pt-tone-s, var(--pt-cell));
+}
+
+.pt-phase-swatch-color[data-tone='p'] {
+  background: var(--pt-tone-p, var(--pt-cell));
+}
+
+.pt-phase-swatch-color[data-tone='d'] {
+  background: var(--pt-tone-d, var(--pt-cell));
+}
+
+.pt-phase-swatch-color[data-tone='f'] {
+  background: var(--pt-tone-f, var(--pt-cell));
+}
+
+.pt-orb-help {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.pt-orb-help-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  color: var(--pt-ink-soft);
+  background: var(--pt-bg);
+  border: 1px solid var(--pt-line);
+  border-radius: 50%;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.pt-orb-help-trigger:hover,
+.pt-orb-help-trigger:focus-visible {
+  color: var(--pt-accent);
+  border-color: var(--pt-accent);
+}
+
+.pt-orb-help-trigger:focus-visible {
+  outline: 2px solid var(--pt-accent);
+  outline-offset: 2px;
+}
+
+.pt-orb-help-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: -120px;
+  z-index: 30;
+  display: block;
+  width: min(860px, 88vw);
+  max-height: 78vh;
+  overflow-y: auto;
+  padding: 16px 20px;
+  background: var(--pt-surface);
+  border: 1px solid var(--pt-line);
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(16, 36, 42, 0.22);
+}
+
 /* ---------- 周期表视图 ---------- */
 .pt-grid-wrap {
   max-width: 100%;
@@ -398,8 +631,7 @@ h1 {
 }
 
 .pt-cell.is-series-highlighted {
-  border-color: var(--pt-accent);
-  border-width: 2px;
+  border: var(--pt-accent) 2px dashed;
   background: var(--pt-accent-soft);
   animation: pt-series-pulse 0.9s ease-in-out 2;
 }
@@ -491,10 +723,299 @@ h1 {
   background: var(--pt-accent-soft);
 }
 
+/* ---------- 元素详情卡片（周期表第 1–3 周期、第 3–12 族空档） ---------- */
+.pt-card {
+  grid-column: 4 / 14;
+  grid-row: 2 / 5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  min-height: 0;
+  padding: 8px 12px;
+  background: var(--pt-surface);
+  border: 1px solid var(--pt-line);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(16, 36, 42, 0.08);
+  overflow: hidden;
+}
+
+.pt-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pt-card-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pt-card-symbol {
+  flex: none;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.pt-card-titles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.pt-card-name {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pt-card-category {
+  overflow: hidden;
+  color: var(--pt-ink-soft);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pt-card-number {
+  margin-left: auto;
+  color: var(--pt-ink-soft);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pt-card-close {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: var(--pt-ink-soft);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    color 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease;
+}
+
+.pt-card-close:hover,
+.pt-card-close:focus-visible {
+  color: var(--pt-accent);
+  background: var(--pt-accent-soft);
+  border-color: var(--pt-accent-line);
+}
+
+.pt-card-close:focus-visible {
+  outline: 2px solid var(--pt-accent);
+  outline-offset: 2px;
+}
+
+.pt-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px 10px;
+  margin: 0;
+}
+
+.pt-card-field {
+  min-width: 0;
+}
+
+.pt-card-field dt {
+  overflow: hidden;
+  color: var(--pt-ink-soft);
+  font-size: 12px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pt-card-field dd {
+  margin: 1px 0 0;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pt-card-phase {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pt-card-phase-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  background: var(--pt-tone-unknown, var(--pt-cell));
+  border: 1px solid var(--pt-line);
+  border-radius: 3px;
+}
+
+.pt-card-phase-dot[data-tone='solid'] {
+  background: var(--pt-tone-solid, var(--pt-cell));
+}
+
+.pt-card-phase-dot[data-tone='liquid'] {
+  background: var(--pt-tone-liquid, var(--pt-cell));
+}
+
+.pt-card-phase-dot[data-tone='gas'] {
+  background: var(--pt-tone-gas, var(--pt-cell));
+}
+
+.pt-card-radii {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-width: 0;
+}
+
+.pt-radius {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pt-radius-donut {
+  display: block;
+  flex: none;
+}
+
+.pt-radius-track {
+  fill: var(--pt-accent-soft);
+  stroke: var(--pt-accent-line);
+  stroke-width: 1;
+}
+
+.pt-radius-fill {
+  fill: var(--pt-ink);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.24s ease;
+}
+
+.pt-radius-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.pt-radius-label {
+  overflow: hidden;
+  color: var(--pt-ink-soft);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pt-radius-value {
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pt-radius-badge {
+  flex: none;
+  padding: 2px 7px;
+  color: var(--pt-accent);
+  background: var(--pt-accent-soft);
+  border: 1px solid var(--pt-accent-line);
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.pt-card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  margin-top: auto;
+  padding-top: 5px;
+  color: var(--pt-ink-soft);
+  border-top: 1px solid var(--pt-line);
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+
+.pt-card-foot-label {
+  flex: none;
+}
+
+.pt-card-foot-sep {
+  color: var(--pt-line);
+}
+
+.pt-card-mono {
+  overflow: hidden;
+  color: var(--pt-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pt-card--empty {
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--pt-ink-soft);
+  border-style: dashed;
+  box-shadow: none;
+  text-align: center;
+}
+
+.pt-card-empty-title {
+  color: var(--pt-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pt-card-empty-hint {
+  font-size: 11.5px;
+}
+
 @media (max-width: 760px) {
   .pt-search {
     flex: 1 1 100%;
     min-width: 0;
+  }
+
+  .pt-phase-bar {
+    gap: 8px;
+  }
+
+  .pt-temperature-range {
+    flex: 1 1 100%;
+    order: 3;
+  }
+
+  .pt-temperature-reset {
+    margin-left: auto;
   }
 
   .pt-filter {
@@ -537,7 +1058,8 @@ h1 {
 
 @media (prefers-reduced-motion: reduce) {
   .pt-cell,
-  .pt-placeholder {
+  .pt-placeholder,
+  .pt-radius-fill {
     transition: none;
   }
 

@@ -20,17 +20,23 @@ export class ElementPalette {
   readonly id: PaletteId
   readonly labelKey: string
   readonly legend: readonly PaletteLegendItem[]
-  private readonly resolveTone: (row: CsvRow) => ElementTone
+  private readonly resolveTone: (row: CsvRow, temperature?: number) => ElementTone
 
-  constructor(id: PaletteId, labelKey: string, legend: readonly PaletteLegendItem[], resolveTone: (row: CsvRow) => ElementTone) {
+  constructor(
+    id: PaletteId,
+    labelKey: string,
+    legend: readonly PaletteLegendItem[],
+    resolveTone: (row: CsvRow, temperature?: number) => ElementTone,
+  ) {
     this.id = id
     this.labelKey = labelKey
     this.legend = legend
     this.resolveTone = resolveTone
   }
 
-  toneOf(row: CsvRow): ElementTone {
-    return this.resolveTone(row)
+  /** temperature 只对方温度敏感色盘（phase）生效，其余色盘忽略该参数。 */
+  toneOf(row: CsvRow, temperature?: number): ElementTone {
+    return this.resolveTone(row, temperature)
   }
 }
 
@@ -76,6 +82,41 @@ export function toneOfPhase(phase?: string): ElementTone {
   }
 }
 
+/** 温度滑块下限（K）。 */
+export const MIN_TEMPERATURE_K = 0
+/** 温度滑块上限（K），略高于已知最高沸点（约 6203 K）。 */
+export const MAX_TEMPERATURE_K = 6500
+/** 温度滑块步长（K）。 */
+export const TEMPERATURE_STEP_K = 1
+/** 常温（约 25 °C），与数据中的常温相态一致。 */
+export const ROOM_TEMPERATURE_K = 298
+
+function parseTemperature(value?: string): number | null {
+  if (!value || value.trim() === '') return null
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+/**
+ * 按给定温度（K）判断相态：
+ * - 低于熔点：固态；熔点与沸点之间：液态；高于沸点：气态。
+ * - 缺少熔点或沸点时按已知的一侧推断；两者都缺失时回落到数据里的常温相态。
+ */
+export function phaseAtTemperature(row: CsvRow, temperature: number): ElementTone {
+  const melt = parseTemperature(row.melt)
+  const boil = parseTemperature(row.boil)
+
+  if (melt !== null && boil !== null) {
+    if (temperature < melt) return 'solid'
+    if (temperature < boil) return 'liquid'
+    return 'gas'
+  }
+
+  if (melt !== null) return temperature < melt ? 'solid' : 'liquid'
+  if (boil !== null) return temperature < boil ? 'solid' : 'gas'
+  return toneOfPhase(row.phase)
+}
+
 /** 按常温相态上色：固态浅黄、液态浅蓝、气态浅绿。 */
 export const PHASE_PALETTE = new ElementPalette(
   'phase',
@@ -85,7 +126,7 @@ export const PHASE_PALETTE = new ElementPalette(
     { tone: 'liquid', labelKey: 'palette.phase.liquid' },
     { tone: 'gas', labelKey: 'palette.phase.gas' },
   ],
-  (row) => toneOfPhase(row.phase),
+  (row, temperature) => (typeof temperature === 'number' ? phaseAtTemperature(row, temperature) : toneOfPhase(row.phase)),
 )
 
 /** 按 s / p / d / f 区上色。 */
