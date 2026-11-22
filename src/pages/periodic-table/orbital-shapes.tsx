@@ -194,7 +194,7 @@ function Section({ tone, title, facts, note, children }: SectionProps) {
 }
 
 /**
- * s / p / d / f 四个亚层轨道的空间结构示意图（由 syt.svg 转换而来）。
+ * s / p / d / f 四个亚层轨道的空间结构示意图。
  * 文字等内容用 DOM 呈现，仅轨道形状保留为内联 SVG；2D 投影仅作形态与方向示意。
  */
 export function OrbitalShapes() {

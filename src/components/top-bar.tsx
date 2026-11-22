@@ -28,7 +28,7 @@ export function TopBar({ children, className }: TopBarProps) {
       <div className="top-bar__slot">{children}</div>
       <div className="top-bar__actions">
         <ThemeToggle label={t('Switch theme')} className="top-bar__icon-button" />
-        <LanguageButton className="top-bar__lang-button" label={t('Switch language')} />
+        <LanguageButton label={t('Switch language')} />
       </div>
     </header>
   )

@@ -131,7 +131,7 @@ h1 {
   justify-content: center;
   width: 36px;
   height: 36px;
-  padding: 0;
+  padding: 4px;
   color: var(--ink-soft, var(--pt-ink-soft));
   background: var(--surface, var(--pt-surface));
   border: 1px solid var(--line-strong, var(--pt-line));
