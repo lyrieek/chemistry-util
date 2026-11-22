@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { ATOMIC_MASSES, calculatePercentages } from '../src/composition'
-import { MATERIALS } from '../src/materials'
+import { ATOMIC_MASSES, calculatePercentages } from '../src/pages/material-cards/composition'
+import { MATERIALS } from '../src/pages/material-cards/materials'
 
 describe('atomic masses and composition percentages', () => {
   it('defines an atomic mass for every element used by the materials', () => {

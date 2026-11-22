@@ -3,8 +3,8 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { Sector, SectorLabel, type SectorArc } from '../src/Sector'
-import type { ElementProportion } from '../src/composition'
+import { Sector, SectorLabel, type SectorArc } from '../src/pages/material-cards/Sector'
+import type { ElementProportion } from '../src/pages/material-cards/composition'
 
 interface RenderOptions {
   element?: ElementProportion

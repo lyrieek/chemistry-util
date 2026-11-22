@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>材料卡片</title>
+    <meta name="description" content="常见材料化学组成的交互式图表。" />
+    <script>
+      ;(() => {
+        let saved = null
+        try {
+          saved = localStorage.getItem('theme')
+        } catch {
+          /* file:// 或隐私模式下拿不到存储，继续用系统偏好 */
+        }
+        const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/pages/material-cards/index.tsx"></script>
+  </body>
+</html>

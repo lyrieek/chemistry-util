@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { mixPercentages, resolveDuration } from '../src/use-animated-percentages'
-import type { ElementProportion } from '../src/composition'
+import { mixPercentages, resolveDuration } from '../src/pages/material-cards/use-animated-percentages'
+import type { ElementProportion } from '../src/pages/material-cards/composition'
 
 function element(sym: string, pct: number): ElementProportion {
   return { sym, n: 1, pct, color: '#008fff' }

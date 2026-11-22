@@ -1,0 +1,62 @@
+{
+  "translation": {
+    "title": "Chemistry Atelier",
+    "description": "A visual workbench for inorganic chemistry: material composition, the periodic table, and orbital shapes.",
+    "brand": "Chemistry Atelier",
+    "brandSub": "化学工具",
+    "nav": {
+      "label": "Primary",
+      "materialCards": "Material Cards",
+      "periodicTable": "Periodic Table"
+    },
+    "Switch theme": "Switch theme",
+    "Switch language": "Switch language",
+    "hero": {
+      "eyebrow": "INORGANIC CHEMISTRY · VISUAL WORKBENCH",
+      "titleLead": "Give chemistry's order",
+      "titleAccent": "a shape you can see",
+      "subtitle": "From a glass of water to an alloy, from atomic orbitals to the whole periodic table. Ratios, structures, and periodicity become plates you can browse.",
+      "ctaPrimary": "Browse material cards",
+      "ctaSecondary": "Open periodic table"
+    },
+    "stats": {
+      "materials": "common materials",
+      "materialsValue": "19",
+      "elements": "elements",
+      "elementsValue": "118",
+      "views": "visual modes",
+      "viewsValue": "2"
+    },
+    "tools": {
+      "eyebrow": "TWO ENTRIES",
+      "title": "Start here",
+      "materialCards": {
+        "tag": "Composition",
+        "title": "Material Cards",
+        "desc": "Draw the elemental composition of common materials as a pie chart or a Voronoi lattice, and switch between mass and atomic ratios instantly.",
+        "point1": "Mass / atomic ratio",
+        "point2": "Pie and lattice views",
+        "point3": "Formula and SMILES",
+        "cta": "Open material cards"
+      },
+      "periodicTable": {
+        "tag": "Periodic table",
+        "title": "Periodic Table",
+        "desc": "A full 17-group layout, recolored by temperature, phase, electronegativity, and atomic radius, with search by Chinese name, symbol, or number.",
+        "point1": "Temperature / phase / electronegativity",
+        "point2": "Chinese name and symbol search",
+        "point3": "Standalone single-file build",
+        "cta": "Open periodic table"
+      }
+    },
+    "science": {
+      "eyebrow": "WHY CHEMISTRY",
+      "title": "From atoms to materials, chemistry connects the microscopic and the macroscopic",
+      "body": "A formula is a recipe, a structural formula is its skeleton, and ratios and periodicity are the grammar that runs through both. Drawing those relationships turns abstract numbers into shapes you can compare, remember, and keep questioning.",
+      "quote": "We do not see elements so much as the relationships between them.",
+      "caption": "Benzene ring and p orbitals"
+    },
+    "footer": "Chemistry Atelier · read matter through plates",
+    "footerNote": "Data from public element property tables; charts are for learning and illustration."
+  }
+}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { MATERIALS } from '../src/materials'
-import { materialMatches } from '../src/search'
+import { MATERIALS } from '../src/pages/material-cards/materials'
+import { materialMatches } from '../src/pages/material-cards/search'
 
 function material(name: string) {
   const found = MATERIALS.find((item) => item.name === name)

@@ -5,7 +5,8 @@ import path from 'node:path'
 
 const pages = [
   { name: 'index', input: 'index.html' },
-  { name: 'periodic-table', input: 'src/pages/periodic-table.html' },
+  { name: 'material-cards', input: 'src/pages/material-cards/index.html' },
+  { name: 'periodic-table', input: 'src/pages/periodic-table/index.html' },
 ]
 
 const dist = path.resolve('dist')
@@ -124,15 +125,19 @@ const inlinePages = async () => {
   const htmlFiles = await collectHtml(dist)
   await Promise.all(htmlFiles.map(processHtml))
 
-  for (const file of htmlFiles) {
-    const target = path.join(dist, path.basename(file))
-    if (file !== target) await rename(file, target)
+  const outputs = []
+  for (const page of pages) {
+    const outDir = path.join(dist, page.name)
+    const source = path.join(outDir, page.input)
+    const target = path.join(dist, `${page.name}.html`)
+    if (source !== target) await rename(source, target)
+    outputs.push(target)
   }
 
   await prune(dist)
 
-  for (const file of htmlFiles) {
-    const html = await readFile(path.join(dist, path.basename(file)), 'utf8')
+  for (const file of outputs) {
+    const html = await readFile(file, 'utf8')
     const kb = (Buffer.byteLength(html) / 1024).toFixed(1)
     // oxlint-disable-next-line no-console
     console.log(`single-file build: dist/${path.basename(file)} (${kb} kB)`)

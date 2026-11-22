@@ -5,7 +5,9 @@ import enMaterialCards from '../src/locales/material-cards/en.json'
 import zhPeriodicTable from '../src/locales/periodic-table/zh.json'
 import enPeriodicTable from '../src/locales/periodic-table/en.json'
 import valueKeys from '../src/locales/periodic-table/value-keys.json'
-import { MATERIALS } from '../src/materials'
+import zhHome from '../src/locales/home/zh.json'
+import enHome from '../src/locales/home/en.json'
+import { MATERIALS } from '../src/pages/material-cards/materials'
 
 const translation = (locale: Record<string, unknown>) => locale.translation as Record<string, unknown>
 
@@ -70,6 +72,10 @@ describe('locale files', () => {
 
   it('keeps both languages in sync for periodic-table', () => {
     expectSameKeys(zhPt, enPt)
+  })
+
+  it('keeps both languages in sync for home', () => {
+    expectSameKeys(translation(zhHome), translation(enHome))
   })
 
   it('covers every material name and description', () => {

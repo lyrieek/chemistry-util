@@ -1,6 +1,6 @@
 {
   "translation": {
-    "title": "化学工具",
+    "title": "材料卡片",
     "description": "常见材料化学组成的交互式图表。",
     "Search": "搜索",
     "Search materials": "搜索材料",
@@ -16,6 +16,7 @@
     "Mass ratio": "质量比",
     "Atomic ratio": "原子比",
     "Switch theme": "切换主题",
+    "Home": "首页",
     "Switch language": "切换语言",
     "atom_one": "个原子",
     "atom_other": "个原子",

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ORBITAL_SHAPES_NS } from '../i18n-ns'
+import { ORBITAL_SHAPES_NS } from '../../i18n-ns'
 import './orbital-shapes.css'
 
 const STROKE_S = '#D97706'

@@ -4,8 +4,12 @@ import { resolve } from 'node:path'
 
 function devRoutes(): Plugin {
   const routes: Record<string, string> = {
-    '/periodic-table': '/src/pages/periodic-table.html',
-    '/periodic-table/': '/src/pages/periodic-table.html',
+    '/material-cards': '/src/pages/material-cards/index.html',
+    '/material-cards/': '/src/pages/material-cards/index.html',
+    '/material-cards.html': '/src/pages/material-cards/index.html',
+    '/periodic-table': '/src/pages/periodic-table/index.html',
+    '/periodic-table/': '/src/pages/periodic-table/index.html',
+    '/periodic-table.html': '/src/pages/periodic-table/index.html',
   }
   return {
     name: 'dev-routes',
@@ -30,7 +34,8 @@ export default defineConfig(({ command }) => ({
     rollupOptions: {
       input: {
         index: resolve('index.html'),
-        'periodic-table': resolve('src/pages/periodic-table.html'),
+        'material-cards': resolve('src/pages/material-cards/index.html'),
+        'periodic-table': resolve('src/pages/periodic-table/index.html'),
       },
     },
   },

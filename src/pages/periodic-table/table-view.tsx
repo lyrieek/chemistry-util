@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { PERIODIC_TABLE_NS } from '../i18n-ns'
-import valueKeys from '../locales/periodic-table/value-keys.json'
-import type { CsvRow } from '../utils/csv-utils'
-import { formatNumericValue } from '../utils/number-format'
+import { PERIODIC_TABLE_NS } from '../../i18n-ns'
+import valueKeys from '../../locales/periodic-table/value-keys.json'
+import type { CsvRow } from '../../utils/csv-utils'
+import { formatNumericValue } from '../../utils/number-format'
 
 type ValueNs = 'element' | 'category' | 'appearance' | 'valTypes'
 

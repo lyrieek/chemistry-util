@@ -1,0 +1,348 @@
+/* ---------- 基础变量：浅色是“实验台白”，深色是“夜灯实验室” ---------- */
+:root {
+  color-scheme: light;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  --bg: #f4f7f8;
+  --bg-glow: rgba(14, 124, 134, 0.13);
+  --grid: rgba(16, 36, 42, 0.055);
+  --surface: #ffffff;
+  --surface-2: #f7fbfb;
+  --ink: #10242a;
+  --ink-soft: #5d737a;
+  --line: #dbe6e9;
+  --line-strong: #b9ccd1;
+  --accent: #0e7c86;
+  --accent-ink: #075a62;
+  --accent-soft: #e5f4f5;
+  --accent-line: #b7dfe1;
+  --shadow: 0 1px 2px rgba(16, 36, 42, 0.06), 0 18px 40px -28px rgba(16, 36, 42, 0.55);
+  --shadow-hover: 0 2px 4px rgba(16, 36, 42, 0.08), 0 26px 50px -30px rgba(16, 36, 42, 0.62);
+  --lattice-shadow: 0 12px 26px -24px rgba(16, 36, 42, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --radius: 14px;
+  --max-width: 1350px;
+}
+
+/* ---------- 深色模式：由 <html data-theme="dark"> 控制，按钮可手动切换 ---------- */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a1418;
+  --bg-glow: rgba(57, 205, 209, 0.14);
+  --grid: rgba(151, 219, 222, 0.07);
+  --surface: #0f1e23;
+  --surface-2: #0c191d;
+  --ink: #e6f2f3;
+  --ink-soft: #90a9ae;
+  --line: #1e343a;
+  --line-strong: #2b474e;
+  --accent: #3fd0d4;
+  --accent-ink: #8ff0f2;
+  --accent-soft: #122d31;
+  --accent-line: #24555c;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 18px 40px -26px rgba(0, 0, 0, 0.85);
+  --shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.45), 0 26px 52px -28px rgba(0, 0, 0, 0.9);
+  --lattice-shadow: 0 14px 30px -26px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--sans);
+  color: var(--ink);
+  background-color: var(--bg);
+  background-image: radial-gradient(900px 460px at 50% -10%, var(--bg-glow), transparent 70%), radial-gradient(var(--grid) 1px, transparent 1.6px);
+  background-repeat: no-repeat, repeat;
+  background-size:
+    auto,
+    22px 22px;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ---------- 标题：大标题 + 周期表方块样式的小节标题 ---------- */
+h1 {
+  max-width: var(--max-width);
+  margin: 36px auto 2px;
+  padding: 0 24px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+h1::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin-top: 16px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: var(--max-width);
+  margin: 18px auto 0;
+  padding: 0 24px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* 小方块：模仿周期表元素格 */
+h2::before {
+  content: '';
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 2px var(--surface);
+}
+
+/* ---------- 卡片网格：桌面自动多列，卡片最小 265px ---------- */
+.composition-grid {
+  counter-reset: card;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+  gap: 18px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 18px 12px 56px;
+}
+
+.composition-card {
+  counter-increment: card;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding: 20px 14px 16px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* 左上角编号：像样品瓶上的序列号 */
+.composition-card::before {
+  content: counter(card, decimal-leading-zero);
+  position: absolute;
+  top: 11px;
+  left: 13px;
+  font: 600 10px/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  opacity: 0.65;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 顶部细条：实验台标签的色带 */
+.composition-card::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), transparent 62%);
+  opacity: 0.55;
+}
+
+h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.card-desc {
+  margin: 0 0 8px;
+  max-width: 40ch;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* 化学式：等宽字体 + 药丸标签，像实验记录里的试剂编号 */
+.card-formula {
+  margin-bottom: 8px;
+  padding: 4px 11px;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+}
+
+/* SMILES 行：等宽字体，长串在卡片内换行 */
+.card-smiles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+  max-width: 100%;
+  margin: 0 0 12px;
+  padding: 0 2px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.card-smiles-label {
+  flex: none;
+  font: 700 9px/1.6 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--accent-ink);
+  opacity: 0.75;
+}
+
+.card-smiles-value {
+  min-width: 0;
+  font-family: var(--mono);
+  overflow-wrap: anywhere;
+}
+
+/* 图表托盘：只负责占位与尺寸，本身不带边框 */
+.pie-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.pie-chart {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.pie-chart:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.seg {
+  cursor: pointer;
+  transition:
+    opacity 0.15s ease,
+    filter 0.15s ease;
+}
+
+.sector-labels {
+  pointer-events: none;
+}
+
+text {
+  font: 12px/1.4 var(--sans);
+  fill: #111;
+  user-select: none;
+}
+
+/* 深浅色下饼图标签都保持深色字，因为扇区是浅色系 */
+:root[data-theme='dark'] text {
+  fill: #111;
+}
+
+/* ---------- 只有鼠标设备才启用悬停效果 ---------- */
+@media (hover: hover) and (pointer: fine) {
+  .composition-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .seg:hover {
+    opacity: 0.88;
+    filter: saturate(1.08);
+  }
+}
+
+/* ---------- 手机端（<=768px）：单列大卡片、收紧留白 ---------- */
+@media (max-width: 768px) {
+  h1 {
+    margin: 22px auto 2px;
+    padding: 0 16px;
+    font-size: 26px;
+  }
+
+  h2 {
+    margin-top: 14px;
+    padding: 0 16px;
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+  }
+
+  .composition-grid {
+    /* 手机统一单列：200px 的图表放进双列会被挤扁 */
+    grid-template-columns: 1fr;
+    gap: 14px;
+    max-width: 440px;
+    padding: 14px 16px 44px;
+  }
+
+  .composition-card {
+    padding: 18px 12px 14px;
+  }
+
+  .card-smiles.is-empty {
+    display: none;
+  }
+
+  /* 极窄屏（<345px）时按屏宽略缩，避免左右贴边；宽屏手机则放大到 220px */
+  .pie-wrap {
+    width: min(220px, 60vw);
+    height: min(220px, 60vw);
+  }
+
+  .card-desc {
+    font-size: 11.5px;
+  }
+}
+
+/* ---------- 触屏设备：没有 hover，取消卡片上浮 ---------- */
+@media (hover: none) {
+  .composition-card:hover {
+    transform: none;
+    border-color: var(--line);
+    box-shadow: var(--shadow);
+  }
+}
+
+/* ---------- 减少动态效果偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .composition-card,
+  .seg {
+    transition: none;
+  }
+
+  .composition-card:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "translation": {
+    "title": "化学工具",
+    "description": "无机化学的可视化实验台：材料组成、元素周期表与轨道形态。",
+    "brand": "化学工具",
+    "brandSub": "Chemistry Atelier",
+    "nav": {
+      "label": "主导航",
+      "materialCards": "材料卡片",
+      "periodicTable": "元素周期表"
+    },
+    "Switch theme": "切换主题",
+    "Switch language": "切换语言",
+    "hero": {
+      "eyebrow": "无机化学 · 可视化实验台",
+      "titleLead": "把化学的秩序，",
+      "titleAccent": "变成看得见的形状",
+      "subtitle": "从一杯水到一块合金，从原子轨道到整个元素周期表。把抽象的比例、结构与周期性，收进可以随手翻阅的图版。",
+      "ctaPrimary": "浏览材料卡片",
+      "ctaSecondary": "打开元素周期表"
+    },
+    "stats": {
+      "materials": "常见材料",
+      "materialsValue": "19",
+      "elements": "元素",
+      "elementsValue": "118",
+      "views": "可视化方式",
+      "viewsValue": "2"
+    },
+    "tools": {
+      "eyebrow": "两个入口",
+      "title": "从这里开始",
+      "materialCards": {
+        "tag": "组成分析",
+        "title": "材料卡片",
+        "desc": "把常见材料的元素组成画成饼图或 Voronoi 晶格，在质量比与原子比之间即时切换。",
+        "point1": "质量比 / 原子比",
+        "point2": "饼图与晶格双视图",
+        "point3": "化学式与 SMILES",
+        "cta": "进入材料卡片"
+      },
+      "periodicTable": {
+        "tag": "元素周期表",
+        "title": "元素周期表",
+        "desc": "17 族全周期布局，按温度、相态、电负性与原子半径重新着色，支持中文名、符号与序号搜索。",
+        "point1": "温度 / 相态 / 电负性",
+        "point2": "中文名称与符号搜索",
+        "point3": "独立单文件构建",
+        "cta": "打开元素周期表"
+      }
+    },
+    "science": {
+      "eyebrow": "为什么是化学",
+      "title": "从原子到材料，化学连接微观与宏观",
+      "body": "化学式是物质的配方，结构式是它的骨架，而比例与周期性是贯穿其中的语法。把这些关系画出来，抽象的数字就变成了可以比较、可以记忆、也可以继续追问的形状。",
+      "quote": "我们看见的不是元素，而是元素之间的关系。",
+      "caption": "苯环与 p 轨道示意"
+    },
+    "footer": "化学工具 · 用图版阅读物质",
+    "footerNote": "数据来自公开的元素性质表；图表仅用于学习与示意。"
+  }
+}

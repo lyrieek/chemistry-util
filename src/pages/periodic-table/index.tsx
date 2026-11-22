@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { createRoot } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
-import csvText from '../../data/PeriodicTable.csv?raw'
-import { LanguageButton } from '../components/language-button'
-import { Popover, PopoverAction, PopoverHeading, PopoverItem, PopoverList } from '../components/popover'
-import { Slider } from '../components/slider'
-import { ORBITAL_SHAPES_NS, PERIODIC_TABLE_NS } from '../i18n-ns'
-import { parseCsv } from '../utils/csv-utils'
+import csvText from '../../../data/PeriodicTable.csv?raw'
+import { HomeLink } from '../../components/home-link'
+import { Popover, PopoverAction, PopoverHeading, PopoverItem, PopoverList } from '../../components/popover'
+import { Slider } from '../../components/slider'
+import { TopBar } from '../../components/top-bar'
+import { ORBITAL_SHAPES_NS, PERIODIC_TABLE_NS } from '../../i18n-ns'
+import { parseCsv } from '../../utils/csv-utils'
 import {
   DEFAULT_PALETTE_ID,
   ELEMENT_PALETTES,
@@ -16,10 +17,10 @@ import {
   ROOM_TEMPERATURE_K,
   TEMPERATURE_STEP_K,
   type PaletteId,
-} from '../utils/element-palette'
-import { elementMatches } from '../utils/element-search'
-import { sortNumber } from '../utils/number-format'
-import { isPeriodicElement } from '../utils/periodic-layout'
+} from '../../utils/element-palette'
+import { elementMatches } from '../../utils/element-search'
+import { sortNumber } from '../../utils/number-format'
+import { isPeriodicElement } from '../../utils/periodic-layout'
 import { OrbitalShapes } from './orbital-shapes'
 import { PeriodicView } from './periodic-view'
 import { COLUMNS, DEFAULT_HIDDEN, TableView, type SortState } from './table-view'
@@ -259,9 +260,8 @@ function Page() {
   })
 
   return (
-    <div className="pt-page">
-      <h1>{t('Periodic Table')}</h1>
-      <div className={view === 'table' ? 'pt-toolbar' : 'pt-toolbar pt-toolbar--periodic'}>
+    <>
+      <TopBar>
         <input className="pt-search" placeholder={t('Search elements')} value={query} onChange={(e) => setQuery(e.currentTarget.value)} />
         {view === 'table' && (
           <Popover
@@ -327,25 +327,28 @@ function Page() {
             </PopoverList>
           </Popover>
         )}
-        <LanguageButton className="pt-lang-button" label={t('Switch language')} />
+        <HomeLink label={t('Home')} />
+      </TopBar>
+      <div className="pt-page">
+        <h1>{t('Periodic Table')}</h1>
+        {view === 'periodic' && (
+          <PhaseTemperatureBar
+            paletteId={paletteId}
+            temperature={temperature}
+            onChange={(next) => {
+              setTemperature(next)
+              // 温度只对相态色盘有意义，拖动时自动切过去，避免出现「拖了没反应」。
+              setPaletteId('phase')
+            }}
+          />
+        )}
+        {view === 'table' ? (
+          <TableView columns={columns} rows={sorted} sort={sort} onSort={handleSort} />
+        ) : (
+          <PeriodicView rows={rows} matchedNumbers={matchedNumbers} searchActive={searchActive} paletteId={paletteId} temperature={temperature} />
+        )}
       </div>
-      {view === 'periodic' && (
-        <PhaseTemperatureBar
-          paletteId={paletteId}
-          temperature={temperature}
-          onChange={(next) => {
-            setTemperature(next)
-            // 温度只对相态色盘有意义，拖动时自动切过去，避免出现「拖了没反应」。
-            setPaletteId('phase')
-          }}
-        />
-      )}
-      {view === 'table' ? (
-        <TableView columns={columns} rows={sorted} sort={sort} onSort={handleSort} />
-      ) : (
-        <PeriodicView rows={rows} matchedNumbers={matchedNumbers} searchActive={searchActive} paletteId={paletteId} temperature={temperature} />
-      )}
-    </div>
+    </>
   )
 }
 

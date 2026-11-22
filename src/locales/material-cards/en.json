@@ -1,6 +1,6 @@
 {
   "translation": {
-    "title": "Chemistry util",
+    "title": "Material Cards",
     "description": "Interactive chemical-composition charts of common materials.",
     "Search": "Search",
     "Search materials": "Search materials",
@@ -16,6 +16,7 @@
     "Mass ratio": "Mass ratio",
     "Atomic ratio": "Atomic ratio",
     "Switch theme": "Switch theme",
+    "Home": "Home",
     "Switch language": "Switch language",
     "atom_one": "atom",
     "atom_other": "atoms",

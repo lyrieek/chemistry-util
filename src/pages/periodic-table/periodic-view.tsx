@@ -1,13 +1,13 @@
 import { useMemo, useState, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PERIODIC_TABLE_NS } from '../i18n-ns'
-import type { CsvRow } from '../utils/csv-utils'
-import { categoryKeyOf } from '../utils/element-labels'
-import { DEFAULT_PALETTE_ID, getElementPalette, ionizationFraction, type PaletteId } from '../utils/element-palette'
-import { radiusExtentsOf } from '../utils/element-radii'
-import { formatNumber } from '../utils/number-format'
-import { isPeriodicElement, layoutOf, type Series } from '../utils/periodic-layout'
-import { PeriodicTableCard } from './periodic-table-card'
+import { PERIODIC_TABLE_NS } from '../../i18n-ns'
+import type { CsvRow } from '../../utils/csv-utils'
+import { categoryKeyOf } from '../../utils/element-labels'
+import { DEFAULT_PALETTE_ID, getElementPalette, ionizationFraction, type PaletteId } from '../../utils/element-palette'
+import { radiusExtentsOf } from '../../utils/element-radii'
+import { formatNumber } from '../../utils/number-format'
+import { isPeriodicElement, layoutOf, type Series } from '../../utils/periodic-layout'
+import { PeriodicTableCard } from './card'
 
 const GROUPS = Array.from({ length: 18 }, (_, index) => index + 1)
 const PERIODS = Array.from({ length: 7 }, (_, index) => index + 1)

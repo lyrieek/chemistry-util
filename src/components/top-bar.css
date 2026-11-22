@@ -1,0 +1,293 @@
+/* ---------- 共用顶栏：导航页 / 材料卡片 / 元素周期表三页共用 ---------- */
+.top-bar {
+  /* 顶栏自带一套与导航页一致的配色，不依赖各页面自己的变量 */
+  --tb-bg: rgba(243, 246, 245, 0.86);
+  --tb-surface: #ffffff;
+  --tb-surface-2: #f7faf9;
+  --tb-ink: #10242a;
+  --tb-ink-soft: #5d737a;
+  --tb-line: #dbe6e9;
+  --tb-line-strong: #b9ccd1;
+  --tb-accent: #0e7c86;
+  --tb-accent-ink: #075a62;
+  --tb-accent-soft: #e5f4f5;
+  --tb-accent-contrast: #ffffff;
+  --tb-sans: var(--sans, system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif);
+  --tb-serif: var(--serif, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', 'Songti SC', 'Noto Serif SC', serif);
+  --tb-mono: var(--mono, ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace);
+  --tb-max-width: var(--max-width, 1180px);
+
+  /* 插槽里的通用组件（Slider / Popover / 搜索框等）直接沿用顶栏配色 */
+  --bar: var(--tb-bg);
+  --surface: var(--tb-surface);
+  --surface-2: var(--tb-surface-2);
+  --ink: var(--tb-ink);
+  --ink-soft: var(--tb-ink-soft);
+  --line: var(--tb-line);
+  --line-strong: var(--tb-line-strong);
+  --accent: var(--tb-accent);
+  --accent-ink: var(--tb-accent-ink);
+  --accent-soft: var(--tb-accent-soft);
+  --accent-contrast: var(--tb-accent-contrast);
+
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 61px;
+  padding: 12px max(24px, calc((100vw - var(--tb-max-width)) / 2 + 24px));
+  color: var(--tb-ink);
+  background: var(--tb-bg);
+  border-bottom: 1px solid var(--tb-line);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+:root[data-theme='dark'] .top-bar {
+  --tb-bg: rgba(8, 18, 22, 0.86);
+  --tb-surface: #0e1d22;
+  --tb-surface-2: #0b181c;
+  --tb-ink: #e8f3f4;
+  --tb-ink-soft: #94acb1;
+  --tb-line: #1d3339;
+  --tb-line-strong: #2a474e;
+  --tb-accent: #3fd0d4;
+  --tb-accent-ink: #8ff0f2;
+  --tb-accent-soft: #102b2f;
+  --tb-accent-contrast: #062a2e;
+}
+
+/* ---------- 品牌 ---------- */
+.top-bar__brand {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.top-bar__brand .brand__mark {
+  width: 34px;
+  height: 34px;
+  color: var(--tb-accent);
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.brand__name {
+  font-family: var(--tb-serif);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.brand__sub {
+  font-family: var(--tb-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tb-ink-soft);
+}
+
+/* ---------- 插槽：各页面把自己的控件放进来 ---------- */
+.top-bar__slot {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* ---------- 导航页的 site-nav ---------- */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-left: auto;
+}
+
+.site-nav a {
+  position: relative;
+  padding: 6px 0;
+  font: 600 13px/1 var(--tb-sans);
+  color: var(--tb-ink-soft);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.site-nav a::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1.5px;
+  background: var(--tb-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s ease;
+}
+
+.site-nav a:hover {
+  color: var(--tb-ink);
+}
+
+.site-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---------- 右侧固定动作：主题 + 语言 ---------- */
+.top-bar__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-bar__icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: var(--tb-accent-ink);
+  background: var(--tb-surface);
+  border: 1px solid var(--tb-line-strong);
+  border-radius: 50%;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.top-bar__icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.top-bar__icon-button:hover {
+  color: var(--tb-accent);
+  border-color: var(--tb-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px -14px rgba(14, 124, 134, 0.8);
+}
+
+.top-bar__lang-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  font: 600 12px/1 var(--tb-sans);
+  color: var(--tb-accent-ink);
+  background: var(--tb-surface);
+  border: 1px solid var(--tb-line-strong);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.top-bar__lang-button::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tb-accent);
+  box-shadow: 0 0 0 3px var(--tb-accent-soft);
+}
+
+.top-bar__lang-button:hover {
+  color: var(--tb-accent);
+  border-color: var(--tb-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px -14px rgba(14, 124, 134, 0.8);
+}
+
+:root[data-theme='dark'] .top-bar__icon-button,
+:root[data-theme='dark'] .top-bar__lang-button {
+  box-shadow: none;
+}
+
+.top-bar__brand:focus-visible,
+.top-bar__icon-button:focus-visible,
+.top-bar__lang-button:focus-visible,
+.site-nav a:focus-visible {
+  outline: 2px solid var(--tb-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- 手机端：品牌与动作一行，插槽整体换到第二行 ---------- */
+@media (max-width: 760px) {
+  .top-bar {
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    padding: 10px 16px;
+  }
+
+  .top-bar__slot {
+    order: 3;
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    padding-top: 8px;
+    border-top: 1px solid var(--tb-line);
+  }
+
+  .top-bar__actions {
+    margin-left: auto;
+  }
+
+  .site-nav {
+    margin-left: 0;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand__sub {
+    display: none;
+  }
+
+  .top-bar__lang-button {
+    padding: 9px 12px;
+    font-size: 11.5px;
+  }
+}
+
+@media (hover: none) {
+  .top-bar__icon-button:hover,
+  .top-bar__lang-button:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .top-bar__icon-button,
+  .top-bar__lang-button,
+  .site-nav a,
+  .site-nav a::after {
+    transition: none;
+  }
+
+  .top-bar__icon-button:hover,
+  .top-bar__lang-button:hover {
+    transform: none;
+  }
+}

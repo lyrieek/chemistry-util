@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import { PERIODIC_TABLE_NS } from '../i18n-ns'
-import type { CsvRow } from '../utils/csv-utils'
-import { categoryKeyOf } from '../utils/element-labels'
-import { ionizationFraction, phaseAtTemperature, toneOfPhase, type ElementTone } from '../utils/element-palette'
-import { radiusOf, type RadiusExtents } from '../utils/element-radii'
-import { formatNumber, formatNumericValue } from '../utils/number-format'
+import { PERIODIC_TABLE_NS } from '../../i18n-ns'
+import type { CsvRow } from '../../utils/csv-utils'
+import { categoryKeyOf } from '../../utils/element-labels'
+import { ionizationFraction, phaseAtTemperature, toneOfPhase, type ElementTone } from '../../utils/element-palette'
+import { radiusOf, type RadiusExtents } from '../../utils/element-radii'
+import { formatNumber, formatNumericValue } from '../../utils/number-format'
 
 interface PeriodicTableCardProps {
   row: CsvRow | null
