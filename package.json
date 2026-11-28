@@ -10,6 +10,7 @@
     "lint:tsc": "tsc -b",
     "lint:fmt": "oxfmt --check src/ scripts/",
     "lint:eslint": "oxlint",
+    "test": "vitest run",
     "preview": "vite preview"
   },
   "packageManager": "pnpm@12.16.1",

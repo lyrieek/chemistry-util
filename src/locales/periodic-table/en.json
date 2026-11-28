@@ -1,6 +1,7 @@
 {
   "translation": {
     "Periodic Table": "Periodic Table",
+    "description": "An interactive periodic table colorable by phase, block and temperature, with search by name, symbol or number.",
     "Search elements": "Search by name, symbol or number…",
     "Elements count": "{{n}} of {{total}} elements",
     "Switch language": "Switch language",

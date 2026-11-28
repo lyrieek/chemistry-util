@@ -1,6 +1,7 @@
 {
   "translation": {
     "Periodic Table": "元素周期表",
+    "description": "可按相态、分区与温度着色的交互式元素周期表，支持按名称、符号和序号搜索。",
     "Search elements": "按名称、符号或序号搜索…",
     "Elements count": "{{n}} / {{total}} 种元素",
     "Switch language": "切换语言",

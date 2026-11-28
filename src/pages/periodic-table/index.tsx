@@ -244,6 +244,7 @@ function Page() {
 
   useEffect(() => {
     document.title = t('Periodic Table')
+    document.querySelector('meta[name="description"]')?.setAttribute('content', t('description'))
   }, [t, i18n.language])
 
   const viewOptions = VIEW_OPTIONS.map((option) => {

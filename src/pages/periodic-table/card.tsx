@@ -87,7 +87,7 @@ export function PeriodicTableCard({ row, temperature, radiusExtents, onClose }: 
   const missingRadiusLabel = Number(row.number) >= 97 ? t('no bulk crystal') : t('no radius data')
 
   return (
-    <aside className="pt-card" aria-live="polite" aria-label={`${name} ${row.symbol}`}>
+    <aside className="pt-card pt-card-panel" aria-live="polite" aria-label={`${name} ${row.symbol}`}>
       <header className="pt-card-head">
         <div className="pt-card-identity">
           <span className="pt-card-symbol" aria-hidden="true">

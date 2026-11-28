@@ -743,6 +743,11 @@ h1 {
   min-width: 0;
 }
 
+.pt-card.pt-card-panel {
+  padding: 3px 12px;
+  gap: 4px;
+}
+
 .pt-card-identity {
   display: flex;
   align-items: center;
